@@ -8,8 +8,9 @@
 
 Building projections in CQRS/ES is easy using Java / Kotlin classes. An in-memory projection is fast, easy to-test and easy-to-debug, but it 
 needs a replay to be refilled on application restarts. On the other hand, building JPA projection allow to store data ina RDBMS, but require 
-a mapping between the in-memory object representation and relational schema. Eclipse Store allows to easily store object structure without
-the object-relational impedance mismatch. This project is an example showing its application.
+a mapping between the in-memory object representation and relational schema. 
+
+[Microstream](https://microstream.one/) [EclipseStore](https://docs.eclipsestore.io/manual/intro/welcome.html) allows to easily store object structure without the object-relational impedance mismatch. This project is an example showing its application.
 
 ## Additional POC / Ideas
 - 
