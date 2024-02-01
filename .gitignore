@@ -1,6 +1,7 @@
 .docker/data/
 .docker/events/
 target/
+.storage/
 
 pom.xml.tag
 pom.xml.releaseBackup
