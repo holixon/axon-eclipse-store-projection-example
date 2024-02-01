@@ -1,0 +1,13 @@
+version: "3.5"
+
+services:
+  axonserver:
+    image: axoniq/axonserver:2023.2.2-jdk-17
+    container_name: eventstore-eclipsestore-axonserver
+    ports:
+      - "8024:8024"
+      - "8124:8124"
+    volumes:
+      - .docker/config:/axonserver/config:ro
+      - .docker/data:/axonserver/data
+      - .docker/events:/axonserver/events
