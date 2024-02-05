@@ -2,6 +2,7 @@ package io.holixon.example.axon.eclipsestore.infrastructure
 
 import mu.KLogging
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager
+import java.util.function.BiConsumer
 
 
 @Suppress("UNCHECKED_CAST")
@@ -20,13 +21,13 @@ class StorageRoot private constructor() {
      */
     fun init(storageManager: EmbeddedStorageManager): StorageRoot {
       val root = if (storageManager.root() == null) {
-        logger.info { "Initializing new storage root" }
+        logger.info { "[STORAGE-ROOT]: No storage root found. Initializing new storage root." }
         StorageRoot().apply {
           storageManager.setRoot(this)
           storageManager.storeRoot()
         }
       } else {
-        logger.info { "Loading storage root" }
+        logger.info { "[STORAGE-ROOT]: Found existing storage root. Loading it..." }
         storageManager.root() as StorageRoot
       }
       root.storageManager = storageManager
@@ -62,11 +63,27 @@ class StorageRoot private constructor() {
    * Saves an element.
    * @param name element name.
    * @param value element value.
+   * @return value for further processing
    */
-  fun set(name: String, value: Any) {
+  fun <T : Any> set(name: String, value: T): T {
     elements[name] = value
-    storageManager.store(value)
-    storageManager.store(elements)
+    storageManager.store(elements) // storing the entire collection
+    return value
+  }
+
+  /**
+   * Unregisters an element.
+   * @param name name under which the element was registered.
+   * @return value if present or null if no element is available under given name.
+   */
+  fun <T : Any> unset(name: String): T? {
+    return if (elements.containsKey(name)) {
+      (elements.remove(name) as T).also {
+        storageManager.store(elements)
+      }
+    } else {
+      null
+    }
   }
 
   /**
@@ -74,7 +91,7 @@ class StorageRoot private constructor() {
    * @param value value to store.
    */
   fun <T> append(value: T): T {
-    storageManager.store(value)
+    storageManager.store(value) // storing only an element
     return value
   }
 }

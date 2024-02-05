@@ -1,6 +1,6 @@
-package io.holixon.example.axon.eclipsestore.adapter.out.query.model
+package io.holixon.example.axon.eclipsestore.adapter.out.query.impl
 
-import io.holixon.example.axon.eclipsestore.adapter.out.query.model.CourseProjector.Companion.GROUP
+import io.holixon.example.axon.eclipsestore.adapter.out.query.impl.CourseProjector.Companion.GROUP
 import io.holixon.example.axon.eclipsestore.domain.event.CourseCapacityChangedEvent
 import io.holixon.example.axon.eclipsestore.domain.event.CourseCreatedEvent
 import io.holixon.example.axon.eclipsestore.domain.query.Course
@@ -21,7 +21,7 @@ class CourseProjector(
 
   @EventHandler
   fun on(event: CourseCreatedEvent) {
-    logger.info { "[COURSE PROJECTOR]: storing new course ${event.name}" }
+    logger.info { "[COURSE PROJECTOR]: Storing new course '${event.name}'." }
     courseProjectionRepository.save(
       Course(
         id = event.id,
@@ -36,7 +36,7 @@ class CourseProjector(
   @EventHandler
   fun on(event: CourseCapacityChangedEvent) {
     courseProjectionRepository.findById(event.id)?.let {
-      logger.info { "[COURSE PROJECTOR]: changing capacity of ${it.name} to ${event.maxStudents}" }
+      logger.info { "[COURSE PROJECTOR]: Changing capacity of '${it.name}' to ${event.maxStudents}." }
       courseProjectionRepository.save(
         it.copy(maxCapacity = event.maxStudents)
       )

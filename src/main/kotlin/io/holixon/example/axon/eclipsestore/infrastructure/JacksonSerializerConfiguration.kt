@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 
 @Configuration
-class SerializerConfiguration {
+class JacksonSerializerConfiguration {
 
   @Bean
   fun objectMapper() = jacksonObjectMapper()
