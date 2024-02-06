@@ -26,3 +26,5 @@ org:
 logging:
   level:
     io.holixon.example.axon.eclipsestore.infrastructure: INFO # set to DEBUG for Eclipse Store play.
+    org.springframework.web: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
