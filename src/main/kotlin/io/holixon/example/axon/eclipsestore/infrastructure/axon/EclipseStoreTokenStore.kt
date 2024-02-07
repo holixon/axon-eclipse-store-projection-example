@@ -1,5 +1,6 @@
-package io.holixon.example.axon.eclipsestore.infrastructure
+package io.holixon.example.axon.eclipsestore.infrastructure.axon
 
+import io.holixon.example.axon.eclipsestore.infrastructure.eclipsestore.StorageRoot
 import mu.KLogging
 import org.axonframework.eventhandling.GlobalSequenceTrackingToken
 import org.axonframework.eventhandling.TrackingToken

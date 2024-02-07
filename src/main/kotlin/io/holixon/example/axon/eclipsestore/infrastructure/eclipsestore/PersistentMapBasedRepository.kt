@@ -1,4 +1,4 @@
-package io.holixon.example.axon.eclipsestore.infrastructure
+package io.holixon.example.axon.eclipsestore.infrastructure.eclipsestore
 
 open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
   storageRoot: StorageRoot,
@@ -8,7 +8,6 @@ open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
   storageRoot = storageRoot,
   config = config
 ) {
-
 
   companion object {
     @JvmStatic
@@ -44,5 +43,23 @@ open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
       throw IllegalArgumentException("Could not extract id from value $value, no idExtractor was provided.")
     }
     return save(id = id, value = value)
+  }
+
+  fun deleteById(id: KEY): VALUE? {
+    val instance = getModelInstance()
+    val value = instance.remove(id)
+    modifyModelInstance(instance)
+    return value
+  }
+
+  fun deleteAll() {
+    val instance = getModelInstance()
+    instance.clear()
+    modifyModelInstance(instance)
+  }
+
+  fun countAll(): Int {
+    val instance = getModelInstance()
+    return instance.size
   }
 }

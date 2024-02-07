@@ -1,4 +1,4 @@
-package io.holixon.example.axon.eclipsestore.infrastructure
+package io.holixon.example.axon.eclipsestore.infrastructure.eclipsestore
 
 import jakarta.annotation.PostConstruct
 

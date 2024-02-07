@@ -17,7 +17,7 @@
   <url>https://github.com/holixon/axon-eclipse-store-projection-example/</url>
 
   <properties>
-    <eclipsestore.version>1.1.0</eclipsestore.version>
+    <eclipsestore.version>1.2.0-SNAPSHOT</eclipsestore.version>
     <!-- TEST -->
     <mockito.version>5.2.1</mockito.version>
     <assertj.version>3.24.2</assertj.version>
@@ -72,21 +72,28 @@
       <version>${eclipsestore.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.eclipse.store</groupId>
+      <artifactId>integrations-spring-boot3-console</artifactId>
+      <version>${eclipsestore.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.eclipse.serializer</groupId>
       <artifactId>serializer</artifactId>
       <version>${eclipsestore.version}</version>
     </dependency>
+<!--
     <dependency>
       <groupId>org.eclipse.store</groupId>
       <artifactId>storage-restservice</artifactId>
       <version>${eclipsestore.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <!-- TODO manage to use Jackson for it -->
+      <groupId>org.eclipse.store</groupId>
+      <artifactId>storage-restclient-app</artifactId>
+      <version>${eclipsestore.version}</version>
     </dependency>
-
+-->
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -128,9 +135,56 @@
 
   <build>
     <defaultGoal>clean jacoco:prepare-agent package</defaultGoal>
-
     <pluginManagement>
       <plugins>
+        <!--
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>unpack-vaadin-app</id>
+              <phase>generate-resources</phase>
+              <goals><goal>unpack</goal></goals>
+            </execution>
+          </executions>
+          <configuration>
+            <artifactItems>
+              <artifactItem>
+                <groupId>org.eclipse.store</groupId>
+                <artifactId>storage-restclient-app</artifactId>
+                <version>${eclipsestore.version}</version>
+                <type>jar</type>
+                <overWrite>false</overWrite>
+                <outputDirectory>${project.build.directory}/rest-client-app</outputDirectory>
+                <includes>BOOT-INF/classes/**/*.*</includes>
+                <excludes>**/application.properties,**/banner.txt,**/logback.xml</excludes>
+              </artifactItem>
+            </artifactItems>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>copy-vaadin-files</id>
+              <goals>
+                <goal>copy-resources</goal>
+              </goals>
+              <phase>process-resources</phase>
+              <configuration>
+                <resources>
+                  <resource>
+                    <directory>${project.build.directory}/rest-client-app/BOOT-INF/classes</directory>
+                  </resource>
+                </resources>
+                <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        -->
         <plugin>
           <!-- kotlin compiler -->
           <artifactId>kotlin-maven-plugin</artifactId>
@@ -149,6 +203,10 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>

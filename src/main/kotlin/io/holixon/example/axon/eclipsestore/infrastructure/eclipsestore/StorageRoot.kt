@@ -1,8 +1,7 @@
-package io.holixon.example.axon.eclipsestore.infrastructure
+package io.holixon.example.axon.eclipsestore.infrastructure.eclipsestore
 
 import mu.KLogging
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager
-import java.util.function.BiConsumer
 
 
 @Suppress("UNCHECKED_CAST")

@@ -2,8 +2,8 @@ package io.holixon.example.axon.eclipsestore.infrastructure.query.model
 
 import io.holixon.example.axon.eclipsestore.adapter.out.query.impl.CourseProjectionRepository
 import io.holixon.example.axon.eclipsestore.adapter.out.query.impl.CourseProjector
-import io.holixon.example.axon.eclipsestore.infrastructure.EclipseStoreTokenStore
-import io.holixon.example.axon.eclipsestore.infrastructure.StorageRoot
+import io.holixon.example.axon.eclipsestore.infrastructure.axon.EclipseStoreTokenStore
+import io.holixon.example.axon.eclipsestore.infrastructure.eclipsestore.StorageRoot
 import org.axonframework.config.EventProcessingConfigurer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -25,4 +25,5 @@ class CourseAdapterConfiguration {
     storageRoot = storageRoot,
     processingGroupName = CourseProjector.GROUP
   )
+
 }

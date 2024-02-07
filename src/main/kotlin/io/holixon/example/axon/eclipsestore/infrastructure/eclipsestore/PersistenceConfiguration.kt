@@ -1,4 +1,4 @@
-package io.holixon.example.axon.eclipsestore.infrastructure
+package io.holixon.example.axon.eclipsestore.infrastructure.eclipsestore
 
 import org.eclipse.store.integrations.spring.boot.types.EclipseStoreSpringBoot
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager
