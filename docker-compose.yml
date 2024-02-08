@@ -11,3 +11,14 @@ services:
       - .docker/config:/axonserver/config:ro
       - .docker/data:/axonserver/data
       - .docker/events:/axonserver/events
+
+  postgres:
+    image: postgres:13.2
+    container_name: eventstore-eclipsestore-postgresql
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: eclipse-store
+    ports:
+      - '25432:5432'
+

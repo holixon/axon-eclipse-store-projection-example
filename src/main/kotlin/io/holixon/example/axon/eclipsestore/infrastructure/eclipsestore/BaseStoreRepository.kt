@@ -6,7 +6,7 @@ import jakarta.annotation.PostConstruct
  * Base class to implement repositories.
  */
 abstract class BaseStoreRepository<T : Any>(
-  private val storageRoot: StorageRoot,
+  private val storageRootSupplier: () -> StorageRoot,
   val config: EclipseStoreRepositoryConfig = EclipseStoreRepositoryConfig.default()
 ) {
 
@@ -15,7 +15,8 @@ abstract class BaseStoreRepository<T : Any>(
    */
   @PostConstruct
   fun connect() {
-    val repositoryName = getRepositoryName();
+    val repositoryName = getRepositoryName()
+    val storageRoot = storageRootSupplier.invoke()
     // initializes
     if (!storageRoot.contains(repositoryName)) {
       storageRoot.set(repositoryName, initializeModelInstance())
@@ -32,7 +33,12 @@ abstract class BaseStoreRepository<T : Any>(
    * Retrieves a model instance.
    * @return a model instance loaded from root.
    */
-  fun getModelInstance(): T = storageRoot.get(getRepositoryName())
+  fun getModelInstance(): T {
+    val storageRoot = storageRootSupplier.invoke()
+    return storageRoot.get<T>(getRepositoryName()).also {
+      storageRoot.dispose(reuseStorageManager())
+    }
+  }
 
   /**
    * Modifies model instance in the storage.
@@ -40,7 +46,9 @@ abstract class BaseStoreRepository<T : Any>(
    * @return model instance for further use.
    */
   fun modifyModelInstance(modelInstance: T): T {
+    val storageRoot = storageRootSupplier.invoke()
     storageRoot.append(value = modelInstance)
+    storageRoot.dispose(reuseStorageManager())
     return modelInstance
   }
 
@@ -53,6 +61,12 @@ abstract class BaseStoreRepository<T : Any>(
   } else {
     config.name
   }
+
+  /**
+   * Flag indicating if the storage root should be reused.
+   * @return flag, defaults to true.
+   */
+  open fun reuseStorageManager(): Boolean = true
 }
 
 data class EclipseStoreRepositoryConfig(

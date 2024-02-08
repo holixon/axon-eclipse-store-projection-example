@@ -1,11 +1,11 @@
 package io.holixon.example.axon.eclipsestore.infrastructure.eclipsestore
 
 open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
-  storageRoot: StorageRoot,
+  storageRootSupplier: () -> StorageRoot,
   config: EclipseStoreRepositoryConfig,
   private val idExtractor: (VALUE) -> KEY = noIdExtractor()
 ) : BaseStoreRepository<MutableMap<KEY, VALUE>>(
-  storageRoot = storageRoot,
+  storageRootSupplier = storageRootSupplier,
   config = config
 ) {
 
@@ -29,14 +29,14 @@ open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
     return getModelInstance().values.toList()
   }
 
-  fun save(id: KEY, value: VALUE): VALUE {
+  open fun save(id: KEY, value: VALUE): VALUE {
     val instance = getModelInstance()
     instance[id] = value
     modifyModelInstance(instance)
     return value
   }
 
-  fun save(value: VALUE): VALUE {
+  open fun save(value: VALUE): VALUE {
     val id = try {
       idExtractor.invoke(value)
     } catch (e: NotImplementedError) {
@@ -45,14 +45,14 @@ open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
     return save(id = id, value = value)
   }
 
-  fun deleteById(id: KEY): VALUE? {
+  open fun deleteById(id: KEY): VALUE? {
     val instance = getModelInstance()
     val value = instance.remove(id)
     modifyModelInstance(instance)
     return value
   }
 
-  fun deleteAll() {
+  open fun deleteAll() {
     val instance = getModelInstance()
     instance.clear()
     modifyModelInstance(instance)

@@ -122,12 +122,12 @@ class EclipseStoreTokenStore(
     //
   }
 
-  data class ProcessorAndSegment(
+  internal data class ProcessorAndSegment(
     val processor: String,
     val segment: Int
   )
 
-  data class TokenStore(
+  internal data class TokenStore(
     val identifier: String,
     val tokens: MutableMap<ProcessorAndSegment, TrackingToken>
   )

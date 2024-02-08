@@ -1,0 +1,11 @@
+org:
+  eclipse:
+    store:
+      storage-filesystem:
+        sql:
+          postgres:
+            url: jdbc:postgresql://localhost:25432/eclipse-store
+            user: user
+            password: secret
+            data-source-provider: io.holixon.example.axon.eclipsestore.infrastructure.eclipsestore.SpringSqlDataSourceProvider
+            catalog: "public"

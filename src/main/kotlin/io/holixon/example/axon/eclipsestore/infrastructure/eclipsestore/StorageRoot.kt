@@ -5,7 +5,7 @@ import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager
 
 
 @Suppress("UNCHECKED_CAST")
-class StorageRoot private constructor() {
+class StorageRoot {
 
   @Transient
   private lateinit var storageManager: EmbeddedStorageManager
@@ -92,5 +92,16 @@ class StorageRoot private constructor() {
   fun <T> append(value: T): T {
     storageManager.store(value) // storing only an element
     return value
+  }
+
+  /**
+   * Shutdown the storage manager connected to this storage root.
+   * @param reuseStorageManager flag indicating if the storage manager should be reused.
+   *
+   */
+  fun dispose(reuseStorageManager: Boolean) {
+    if (!reuseStorageManager) {
+      storageManager.close()
+    }
   }
 }

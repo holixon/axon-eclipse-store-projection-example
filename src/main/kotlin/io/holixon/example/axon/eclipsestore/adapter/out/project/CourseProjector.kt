@@ -1,6 +1,6 @@
-package io.holixon.example.axon.eclipsestore.adapter.out.query.impl
+package io.holixon.example.axon.eclipsestore.adapter.out.project
 
-import io.holixon.example.axon.eclipsestore.adapter.out.query.impl.CourseProjector.Companion.GROUP
+import io.holixon.example.axon.eclipsestore.adapter.out.project.CourseProjector.Companion.GROUP
 import io.holixon.example.axon.eclipsestore.domain.event.CourseCapacityChangedEvent
 import io.holixon.example.axon.eclipsestore.domain.event.CourseCreatedEvent
 import io.holixon.example.axon.eclipsestore.domain.query.Course
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 @Component
 @ProcessingGroup(GROUP)
 class CourseProjector(
-  private val courseProjectionRepository: CourseProjectionRepository
+  private val courseProjectorRepository: CourseProjectorRepository
 ) {
 
   companion object : KLogging() {
@@ -22,7 +22,7 @@ class CourseProjector(
   @EventHandler
   fun on(event: CourseCreatedEvent) {
     logger.info { "[COURSE PROJECTOR]: Storing new course '${event.name}'." }
-    courseProjectionRepository.save(
+    courseProjectorRepository.save(
       Course(
         id = event.id,
         name = event.name,
@@ -35,9 +35,9 @@ class CourseProjector(
 
   @EventHandler
   fun on(event: CourseCapacityChangedEvent) {
-    courseProjectionRepository.findById(event.id)?.let {
+    courseProjectorRepository.findById(event.id)?.let {
       logger.info { "[COURSE PROJECTOR]: Changing capacity of '${it.name}' to ${event.maxStudents}." }
-      courseProjectionRepository.save(
+      courseProjectorRepository.save(
         it.copy(maxCapacity = event.maxStudents)
       )
     }
