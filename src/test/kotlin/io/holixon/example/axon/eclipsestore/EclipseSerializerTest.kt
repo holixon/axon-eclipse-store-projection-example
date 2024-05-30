@@ -1,6 +1,6 @@
 package io.holixon.example.axon.eclipsestore
 
-import io.holixon.example.axon.eclipsestore.domain.query.Course
+import io.holixon.example.university.course.domain.query.Course
 import org.assertj.core.api.Assertions.assertThat
 import org.eclipse.serializer.Serializer
 import org.eclipse.serializer.SerializerFoundation
@@ -27,7 +27,7 @@ internal class EclipseSerializerTest {
   value class Capacity(val value: Int)
 
   @Test
-  fun serialize_and_deserialize() {
+  fun serialize_and_deserialize_using_typed_serializer() {
 
     val course = Course(
       id = UUID.randomUUID().toString(),
@@ -55,7 +55,7 @@ internal class EclipseSerializerTest {
   }
 
   @Test
-  fun serialize_and_deserialize_with_value() {
+  fun serialize_and_deserialize_with_value_using_typed_serializer() {
 
     val course = CourseWithTypedValues(
       name = CourseName("Math I"),
@@ -88,8 +88,6 @@ internal class EclipseSerializerTest {
       maxCap = Capacity(17)
     )
 
-
-    // use typed serializer to store data into bytes
     val writer = Serializer.Bytes(
       SerializerFoundation.New()
     )

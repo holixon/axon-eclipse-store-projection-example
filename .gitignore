@@ -47,3 +47,7 @@ build/
 ### DEV
 _tmp/
 .repository/
+
+storage/channel_0/channel_0_1.dat
+storage/channel_0/transactions_0.sft
+storage/PersistenceTypeDictionary.ptd
