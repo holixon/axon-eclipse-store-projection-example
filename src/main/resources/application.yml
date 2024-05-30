@@ -28,7 +28,7 @@ org:
     store:
       rest:
         enabled: true
-      root: io.holixon.example.axon.eclipsestore.infrastructure.eclipsestore.StorageRoot
+      root: io.holixon.example.university.course.infrastructure.support.eclipsestore.StorageRoot
 
 vaadin:
   url-mapping: /storage-console/*

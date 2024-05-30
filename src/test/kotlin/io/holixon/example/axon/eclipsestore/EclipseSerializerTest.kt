@@ -1,6 +1,6 @@
 package io.holixon.example.axon.eclipsestore
 
-import io.holixon.example.axon.eclipsestore.domain.query.Course
+import io.holixon.example.university.course.domain.query.Course
 import org.assertj.core.api.Assertions.assertThat
 import org.eclipse.serializer.Serializer
 import org.eclipse.serializer.SerializerFoundation

@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.toolisticon.maven.parent</groupId>
     <artifactId>maven-parent-kotlin-base</artifactId>
-    <version>2023.10.3</version>
+    <version>2024.5.1</version>
     <relativePath/>
   </parent>
 
@@ -17,11 +17,10 @@
   <url>https://github.com/holixon/axon-eclipse-store-projection-example/</url>
 
   <properties>
-    <eclipsestore.version>1.2.0-SNAPSHOT</eclipsestore.version>
-    <!-- TEST -->
-    <mockito.version>5.2.1</mockito.version>
+    <spring-boot.version>3.3.0</spring-boot.version>
+    <eclipsestore.version>1.3.2</eclipsestore.version>
     <assertj.version>3.24.2</assertj.version>
-    <spring-boot.version>3.1.2</spring-boot.version>
+    <mockito.version>5.3.1</mockito.version>
   </properties>
 
   <dependencyManagement>
@@ -36,7 +35,7 @@
       <dependency>
         <groupId>org.axonframework</groupId>
         <artifactId>axon-bom</artifactId>
-        <version>4.9.1</version>
+        <version>4.9.4</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -77,6 +76,11 @@
       <version>${eclipsestore.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.eclipse.store</groupId>
+      <artifactId>storage-restservice-springboot</artifactId>
+      <version>${eclipsestore.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.eclipse.serializer</groupId>
       <artifactId>serializer</artifactId>
       <version>${eclipsestore.version}</version>
@@ -84,24 +88,16 @@
     <dependency>
       <groupId>org.eclipse.store</groupId>
       <artifactId>afs-sql</artifactId>
-      <version>1.1.0</version>
+      <version>${eclipsestore.version}</version>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
     </dependency>
-
-
-
-
-
-
-
-
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.2.0</version>
+      <version>2.5.0</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
@@ -139,59 +135,10 @@
   </dependencies>
 
   <build>
-    <defaultGoal>clean jacoco:prepare-agent package</defaultGoal>
     <pluginManagement>
       <plugins>
-        <!--
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>unpack-vaadin-app</id>
-              <phase>generate-resources</phase>
-              <goals><goal>unpack</goal></goals>
-            </execution>
-          </executions>
-          <configuration>
-            <artifactItems>
-              <artifactItem>
-                <groupId>org.eclipse.store</groupId>
-                <artifactId>storage-restclient-app</artifactId>
-                <version>${eclipsestore.version}</version>
-                <type>jar</type>
-                <overWrite>false</overWrite>
-                <outputDirectory>${project.build.directory}/rest-client-app</outputDirectory>
-                <includes>BOOT-INF/classes/**/*.*</includes>
-                <excludes>**/application.properties,**/banner.txt,**/logback.xml</excludes>
-              </artifactItem>
-            </artifactItems>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>copy-vaadin-files</id>
-              <goals>
-                <goal>copy-resources</goal>
-              </goals>
-              <phase>process-resources</phase>
-              <configuration>
-                <resources>
-                  <resource>
-                    <directory>${project.build.directory}/rest-client-app/BOOT-INF/classes</directory>
-                  </resource>
-                </resources>
-                <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        -->
-        <plugin>
-          <!-- kotlin compiler -->
+          <!-- kotlin compiler needed to activate compiler plugins -->
           <artifactId>kotlin-maven-plugin</artifactId>
           <groupId>org.jetbrains.kotlin</groupId>
           <version>${kotlin.version}</version>
@@ -206,12 +153,7 @@
         </plugin>
       </plugins>
     </pluginManagement>
-
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-      </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>

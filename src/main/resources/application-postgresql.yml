@@ -7,5 +7,5 @@ org:
             url: jdbc:postgresql://localhost:25432/eclipse-store
             user: user
             password: secret
-            data-source-provider: io.holixon.example.axon.eclipsestore.infrastructure.eclipsestore.SpringSqlDataSourceProvider
+            data-source-provider: io.holixon.example.university.course.infrastructure.support.eclipsestore.SpringSqlDataSourceProvider
             catalog: "public"
