@@ -9,7 +9,7 @@ data class CourseCapacity(
     return if (maxStudents >= currentStudents) {
       Result.success(this.copy(maxStudents = maxStudents, currentStudents = this.currentStudents))
     } else {
-      Result.failure(IllegalCapacityChangeException("Can't set capacity to less students as already in course."))
+      Result.failure(IllegalCapacityChange("Can't set capacity to less students as already in course."))
     }
   }
 

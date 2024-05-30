@@ -9,7 +9,6 @@ class ResetProjectionAdminUseCase(
   private val courseProjectionAdminOutPort: CourseProjectionAdminOutPort
 ) : ResetProjectionAdminInPort {
 
-
   override fun resetCourseProjection() {
     courseProjectionAdminOutPort.resetProjection()
   }

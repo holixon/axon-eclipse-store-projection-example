@@ -36,7 +36,7 @@ class JacksonSerializerConfiguration {
   fun defaultAxonObjectMapper() = jacksonObjectMapper()
     .apply {
       registerModule(JavaTimeModule())
-      enableDefaultTyping(ObjectMapper.DefaultTyping.NON_CONCRETE_AND_ARRAYS)
+      activateDefaultTyping(polymorphicTypeValidator, ObjectMapper.DefaultTyping.NON_CONCRETE_AND_ARRAYS)
       enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
       enable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS)
       disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)

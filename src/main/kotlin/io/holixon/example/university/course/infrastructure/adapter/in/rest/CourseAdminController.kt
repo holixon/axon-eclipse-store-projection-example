@@ -18,7 +18,7 @@ class CourseAdminController(
   private val resetProjectionAdminInPort: ResetProjectionAdminInPort
 ) {
 
-  @PostMapping
+  @PostMapping("/season")
   fun createCourses(): ResponseEntity<Void> {
     createCourseInPort.createCourse(UUID.randomUUID().toString(), "Math I", 25, LocalDate.parse("2024-02-01"), LocalDate.parse("2024-07-15"))
     createCourseInPort.createCourse(UUID.randomUUID().toString(), "Physics I", 33, LocalDate.parse("2024-02-01"), LocalDate.parse("2024-07-15"))
@@ -33,7 +33,7 @@ class CourseAdminController(
     return noContent().build()
   }
 
-  @DeleteMapping
+  @DeleteMapping("/season")
   fun reset(): ResponseEntity<Void> {
     resetProjectionAdminInPort.resetCourseProjection()
     return noContent().build()

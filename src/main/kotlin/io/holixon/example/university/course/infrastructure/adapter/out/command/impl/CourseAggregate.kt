@@ -1,8 +1,9 @@
-package io.holixon.example.university.course.infrastructure.adapter.out.command.model
+package io.holixon.example.university.course.infrastructure.adapter.out.command.impl
 
-import io.holixon.example.university.course.infrastructure.adapter.out.command.api.ChangeCourseCapacityCommand
-import io.holixon.example.university.course.infrastructure.adapter.out.command.api.CreateCourseCommand
+import io.holixon.example.university.course.application.port.out.ChangeCourseCapacityCommand
+import io.holixon.example.university.course.application.port.out.CreateCourseCommand
 import io.holixon.example.university.course.domain.command.CourseCapacity
+import io.holixon.example.university.course.domain.command.IllegalCapacityChange
 import io.holixon.example.university.course.domain.event.CourseCapacityChangedEvent
 import io.holixon.example.university.course.domain.event.CourseCreatedEvent
 import org.axonframework.commandhandling.CommandHandler
@@ -35,6 +36,7 @@ internal class CourseAggregate {
   }
 
   @CommandHandler
+  @Throws(IllegalCapacityChange::class)
   fun handle(cmd: ChangeCourseCapacityCommand) {
     val newCapacity = courseCapacity.allowChangeCapacity(cmd.maxStudents).getOrThrow()
     AggregateLifecycle.apply(

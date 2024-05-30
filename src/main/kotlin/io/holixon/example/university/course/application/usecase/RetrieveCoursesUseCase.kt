@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 class RetrieveCoursesUseCase(
   private val coursesQueryOutPort: CoursesQueryOutPort
 ) : RetrieveCoursesInPort {
+
   override fun getCourseById(id: String): Course? {
     return coursesQueryOutPort.getCourseById(id)
   }
