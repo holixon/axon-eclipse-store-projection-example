@@ -9,7 +9,7 @@ interface UnregisterStudentInPort {
 
   /**
    * Unregisters a new student at the university.
-   * @param registrationNumber registration number.
+   * @param matriculationNumber registration number of the student.
    */
-  fun unregisterStudent(registrationNumber: String): CompletableFuture<Void>
+  fun unregisterStudent(matriculationNumber: String): CompletableFuture<Void>
 }

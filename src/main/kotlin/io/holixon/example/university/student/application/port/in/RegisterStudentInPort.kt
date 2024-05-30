@@ -13,7 +13,7 @@ interface RegisterStudentInPort {
    * Registers a new student at the university.
    * @param person personal data
    * @param year registration year
-   * @return registration id.
+   * @return matriculation number.
    */
   fun registerStudent(person: Person, year: Year): CompletableFuture<String>
 }

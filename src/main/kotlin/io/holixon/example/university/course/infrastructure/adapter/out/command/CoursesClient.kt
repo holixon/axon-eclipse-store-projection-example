@@ -1,4 +1,4 @@
-package io.holixon.example.university.course.infrastructure.adapter.out.command.client
+package io.holixon.example.university.course.infrastructure.adapter.out.command
 
 import io.holixon.example.university.course.application.port.out.CoursesCommandOutPort
 import io.holixon.example.university.course.application.port.out.ChangeCourseCapacityCommand

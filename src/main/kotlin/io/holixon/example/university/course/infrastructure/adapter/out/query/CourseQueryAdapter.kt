@@ -1,7 +1,7 @@
-package io.holixon.example.university.course.infrastructure.adapter.out.query.client
+package io.holixon.example.university.course.infrastructure.adapter.out.query
 
-import io.holixon.example.university.course.infrastructure.adapter.out.query.impl.api.AllCoursesMarker
-import io.holixon.example.university.course.infrastructure.adapter.out.query.impl.api.CourseById
+import io.holixon.example.university.course.infrastructure.adapter.out.query.impl.AllCoursesMarker
+import io.holixon.example.university.course.infrastructure.adapter.out.query.impl.CourseById
 import io.holixon.example.university.course.application.port.out.CoursesQueryOutPort
 import io.holixon.example.university.course.domain.query.Course
 import org.axonframework.messaging.responsetypes.ResponseTypes

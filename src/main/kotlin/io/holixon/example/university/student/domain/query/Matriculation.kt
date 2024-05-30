@@ -3,11 +3,11 @@ package io.holixon.example.university.student.domain.query
 import java.time.Year
 
 /**
- * Represents a registration.
+ * Represents a student registration.
  */
-data class Registration(
-  val registrationNumber: String,
+data class Matriculation(
+  val matriculationNumber: String,
   val firstName: String,
   val lastName: String,
-  val registrationYear: Year
+  val year: Year
 )

@@ -5,10 +5,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.eclipse.serializer.Serializer
 import org.eclipse.serializer.SerializerFoundation
 import org.eclipse.serializer.TypedSerializer
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.util.*
 
+@Disabled("just a to understand how the serializer works")
 internal class EclipseSerializerTest {
 
   data class CourseWithTypedValues(
