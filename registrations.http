@@ -1,0 +1,39 @@
+### Create course for the whole season
+POST http://localhost:8091/course-admin/season
+
+### Get all courses
+GET http://localhost:8091/courses
+Content-Type: application/json
+
+### Register kermit
+POST http://localhost:8091/students
+Content-Type: application/json
+
+{
+  "person": {
+    "firstName": "Kermit",
+    "lastName": "The Frog",
+    "birthday": "1980-01-01",
+    "birthPlace": "Los Alamos"
+  },
+  "year": "2024"
+}
+
+### Register piggy
+POST http://localhost:8091/students
+Content-Type: application/json
+
+{
+  "person": {
+    "firstName": "Piggy",
+    "lastName": "Miss",
+    "birthday": "1985-06-01",
+    "birthPlace": "Los Angeles"
+  },
+  "year": "2024"
+}
+
+### Retrieve students
+GET http://localhost:8091/students
+Content-Type: application/json
+

@@ -5,7 +5,9 @@ import io.holixon.example.university.course.infrastructure.support.eclipsestore.
 import io.holixon.example.university.course.infrastructure.support.eclipsestore.StorageRoot
 import io.holixon.example.university.student.domain.query.Matriculation
 
-class MatriculationProjectionRepositoryImpl(storageRootSupplier: () -> StorageRoot) : MatriculationProjectionRepository, PersistentMapBasedRepository<String, Matriculation>(
+class MatriculationProjectionRepositoryImpl(
+  storageRootSupplier: () -> StorageRoot
+) : MatriculationProjectionRepository, PersistentMapBasedRepository<String, Matriculation>(
   storageRootSupplier = storageRootSupplier,
   config = EclipseStoreRepositoryConfig(name = "matriculations"),
   idExtractor = { it.matriculationNumber }

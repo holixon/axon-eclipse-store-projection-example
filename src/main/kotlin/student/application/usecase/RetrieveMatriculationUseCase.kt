@@ -10,8 +10,8 @@ class RetrieveMatriculationUseCase(
   val matriculationQueryOutPort: MatriculationQueryOutPort
 ) : RetrieveMatriculationsInPort {
   override fun findByNumber(matriculationNumber: String): Matriculation? =
-    matriculationQueryOutPort.findMatriculation(matriculationNumber = matriculationNumber)
+    matriculationQueryOutPort.findMatriculation(matriculationNumber = matriculationNumber).join()
 
   override fun findAll(): List<Matriculation> =
-    matriculationQueryOutPort.findAllMatriculations()
+    matriculationQueryOutPort.findAllMatriculations().join()
 }

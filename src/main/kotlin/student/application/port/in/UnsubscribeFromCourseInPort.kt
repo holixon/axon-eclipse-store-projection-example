@@ -1,7 +1,7 @@
 package io.holixon.example.university.student.application.port.`in`
 
-import io.holixon.example.university.student.domain.command.CourseAlreadyStarted
-import io.holixon.example.university.student.domain.command.CourseFull
+import io.holixon.example.university.course.domain.command.CourseAlreadyStarted
+import io.holixon.example.university.course.domain.command.CourseFull
 import io.holixon.example.university.student.domain.command.UnknownCourse
 import java.util.concurrent.CompletableFuture
 

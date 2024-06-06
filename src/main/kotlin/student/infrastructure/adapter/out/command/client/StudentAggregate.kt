@@ -3,6 +3,7 @@ package io.holixon.example.university.student.infrastructure.adapter.out.command
 import io.holixon.example.university.student.application.port.out.RegisterStudentCommand
 import io.holixon.example.university.student.application.port.out.UnregisterStudentCommand
 import io.holixon.example.university.student.domain.command.Person
+import io.holixon.example.university.student.domain.event.CourseSubscriptionCreatedEvent
 import io.holixon.example.university.student.domain.event.StudentRegisteredEvent
 import io.holixon.example.university.student.domain.event.StudentUnregisteredEvent
 import org.axonframework.commandhandling.CommandHandler
@@ -14,7 +15,7 @@ import org.axonframework.modelling.command.CreationPolicy
 import org.axonframework.spring.stereotype.Aggregate
 
 @Aggregate
-internal class StudentAggregate {
+internal class StudentAggregate() {
 
   @AggregateIdentifier
   private lateinit var matriculationNumber: String
@@ -22,7 +23,7 @@ internal class StudentAggregate {
 
   @CreationPolicy(value = AggregateCreationPolicy.CREATE_IF_MISSING)
   @CommandHandler
-  fun handle(cmd: RegisterStudentCommand) {
+  fun handle(cmd: RegisterStudentCommand) : String {
     AggregateLifecycle.apply(
       StudentRegisteredEvent(
         matriculationNumber = cmd.matriculationNumber,
@@ -30,6 +31,7 @@ internal class StudentAggregate {
         year = cmd.year
       )
     )
+    return cmd.matriculationNumber
   }
 
   @CommandHandler
@@ -46,6 +48,6 @@ internal class StudentAggregate {
   fun on(evt: StudentRegisteredEvent) {
     this.matriculationNumber = evt.matriculationNumber
     this.person = evt.person
-  }
 
+  }
 }

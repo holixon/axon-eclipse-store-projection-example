@@ -10,5 +10,7 @@ interface StudentProjectorRepository {
   fun findById(id: String): Matriculation?
   fun save(value: Matriculation): Matriculation
   fun deleteById(id: String): Matriculation?
+  fun deleteAll()
+  fun countAll(): Int
 }
 

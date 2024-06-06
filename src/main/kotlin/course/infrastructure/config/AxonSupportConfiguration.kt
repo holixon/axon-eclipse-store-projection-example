@@ -18,7 +18,7 @@ class AxonSupportConfiguration {
 
   @Bean
   fun tokenStore(storageRoot: StorageRoot): TokenStore {
-    return EclipseStoreTokenStore("courses-application", storageRoot)
+    return EclipseStoreTokenStore("university-application", storageRoot)
   }
 
 }

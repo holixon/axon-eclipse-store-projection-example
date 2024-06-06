@@ -4,5 +4,5 @@ Axon Event Store Projection Example
 
 Swagger UI             : http://localhost:${server.port}/swagger-ui/index.html
 Eclipse Store Console  : http://localhost:${server.port}/storage-console/
-Eclipse Store Endpoint : http://localhost:${server.port}/status/store-data/
+Eclipse Store Endpoint : http://localhost:${server.port}/store-data/
 Axon Server Console    : http://localhost:8024/

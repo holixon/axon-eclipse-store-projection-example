@@ -8,24 +8,29 @@ import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.stereotype.Component
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @Component
 class MatriculationQueryAdapter(
   private val queryGateway: QueryGateway
 ) : MatriculationQueryOutPort {
 
-  override fun findAllMatriculations(): List<Matriculation> {
+  override fun findAllMatriculations(): CompletableFuture<List<Matriculation>> {
     return queryGateway
-      .query("findMatriculations", AllMatriculationsMarker, ResponseTypes.multipleInstancesOf(Matriculation::class.java))
-      .join()
+      .query(
+        "findMatriculations",
+        AllMatriculationsMarker,
+        ResponseTypes.multipleInstancesOf(Matriculation::class.java)
+      )
   }
 
-  override fun findMatriculation(matriculationNumber: String): Matriculation? {
+  override fun findMatriculation(matriculationNumber: String): CompletableFuture<Matriculation?> {
     return queryGateway
-      .query("findMatriculationByNumber", MatriculationByNumber(matriculationNumber = matriculationNumber), ResponseTypes.optionalInstanceOf(Matriculation::class.java))
-      .join()
-      .toKotlin()
-
+      .query("findMatriculationByNumber",
+        MatriculationByNumber(matriculationNumber = matriculationNumber),
+        ResponseTypes.optionalInstanceOf(Matriculation::class.java)
+      )
+      .thenApply { it.toKotlin() }
   }
 
   fun <T> Optional<T>.toKotlin(): T? = if (this.isEmpty) {

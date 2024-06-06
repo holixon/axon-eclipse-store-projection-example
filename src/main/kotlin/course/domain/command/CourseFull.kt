@@ -1,4 +1,4 @@
-package io.holixon.example.university.student.domain.command
+package io.holixon.example.university.course.domain.command
 
 /**
  * Course is full.

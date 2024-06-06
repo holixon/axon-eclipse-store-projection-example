@@ -20,7 +20,23 @@ interface CoursesCommandOutPort {
    * @param command command describing modification.
    */
   fun modifyCourse(command: ChangeCourseCapacityCommand): CompletableFuture<Void>
+
+  /**
+   * Student course subscription.
+   * @param command command describing the subscription.
+   */
+  fun subscribeToCourse(command: SubscribeToCourseCommand): CompletableFuture<Void>
 }
+
+/**
+ * Describes the wish to subscribe to course.
+ */
+data class SubscribeToCourseCommand(
+  @TargetAggregateIdentifier
+  val courseId: String,
+  val matriculationNumber: String,
+  val subscriptionDate: LocalDate
+)
 
 /**
  * Describes course creation intent.

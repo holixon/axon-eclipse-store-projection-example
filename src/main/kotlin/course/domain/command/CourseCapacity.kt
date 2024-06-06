@@ -15,4 +15,9 @@ data class CourseCapacity(
 
   fun changeCapacity(maxStudents: Int): CourseCapacity = this.copy(maxStudents = maxStudents)
 
+
+  fun isFull(): Boolean = currentStudents == maxStudents
+  fun addStudent(): CourseCapacity = this.copy(currentStudents = currentStudents + 1)
+  fun removeStudent(): CourseCapacity = this.copy(currentStudents = currentStudents - 1)
+
 }

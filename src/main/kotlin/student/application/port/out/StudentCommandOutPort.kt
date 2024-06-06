@@ -20,6 +20,7 @@ interface StudentCommandOutPort {
    * Unregisters an existing student.
    */
   fun unregisterStudent(command: UnregisterStudentCommand): CompletableFuture<Void>
+
 }
 
 data class RegisterStudentCommand(
