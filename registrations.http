@@ -1,11 +1,29 @@
 ### Create course for the whole season
+// @no-log
 POST http://localhost:8091/course-admin/season
 
 ### Get all courses
+< {%
+  import {wait} from "wait";
+  console.log("waiting 5 secs");
+  wait(5);
+%}
 GET http://localhost:8091/courses
-Content-Type: application/json
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 200, `Response status is not 200, but ${response.status}`);
+  });
+  client.test("Content-Type is application/json", () => {
+    const contentType = response.headers.valueOf("content-type");
+    client.assert(contentType == "application/json",
+      `Expected Content-Type is application/json, but actual is ${contentType}`)
+  })
+%}
+
 
 ### Register kermit
+// @no-log
 POST http://localhost:8091/students
 Content-Type: application/json
 
@@ -16,10 +34,12 @@ Content-Type: application/json
     "birthday": "1980-01-01",
     "birthPlace": "Los Alamos"
   },
-  "year": "2024"
+  "start": "2024-02-01",
+  "end": "2024-07-15"
 }
 
 ### Register piggy
+// @no-log
 POST http://localhost:8091/students
 Content-Type: application/json
 
@@ -30,10 +50,26 @@ Content-Type: application/json
     "birthday": "1985-06-01",
     "birthPlace": "Los Angeles"
   },
-  "year": "2024"
+  "start": "2024-09-01",
+  "end": "2025-01-31"
 }
 
 ### Retrieve students
+< {%
+  import {wait} from "wait";
+  console.log("waiting 5 secs");
+  wait(5);
+%}
+// @no-log
 GET http://localhost:8091/students
-Content-Type: application/json
 
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 200, `Response status is not 200, but ${response.status}`);
+  });
+  client.test("Content-Type is application/json", () => {
+    const contentType = response.headers.valueOf("content-type");
+    client.assert(contentType == "application/json",
+      `Expected Content-Type is application/json, but actual is ${contentType}`)
+  })
+%}

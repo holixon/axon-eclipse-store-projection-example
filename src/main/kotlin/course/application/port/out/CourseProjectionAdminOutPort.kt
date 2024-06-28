@@ -7,5 +7,5 @@ interface CourseProjectionAdminOutPort {
   /**
    * Resets the projection.
    */
-  fun resetProjection()
+  fun resetCourseProjection()
 }

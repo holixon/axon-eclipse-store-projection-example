@@ -3,7 +3,6 @@ package io.holixon.example.university.student.application.port.out
 import io.holixon.example.university.student.domain.command.Person
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.time.LocalDate
-import java.time.Year
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -29,7 +28,9 @@ data class AddStudentToCourseCommand(
   @TargetAggregateIdentifier
   val matriculationNumber: String,
   val courseId: String,
-  val subscriptionDate: LocalDate
+  val subscriptionDate: LocalDate,
+  val courseStartDate: LocalDate,
+  val courseEndDate: LocalDate
 )
 
 data class RemoveStudentFromCourseCommand(
@@ -43,7 +44,7 @@ data class RegisterStudentCommand(
   @TargetAggregateIdentifier
   val matriculationNumber: String,
   val person: Person,
-  val year: Year
+  val registration: Pair<LocalDate, LocalDate>
 )
 
 data class UnregisterStudentCommand(

@@ -11,12 +11,14 @@ import java.util.concurrent.CompletableFuture
 class SubscribeStudentUseCase(
   private val studentCommandOutPort: StudentCommandOutPort
 ): SubscribeStudentInPort {
-  override fun subscribe(courseId: String, matriculationNumber: String, subscriptionDate: LocalDate): CompletableFuture<Void> {
+  override fun subscribe(courseId: String, matriculationNumber: String, subscriptionDate: LocalDate, courseStart: LocalDate, courseEnd: LocalDate): CompletableFuture<Void> {
     return studentCommandOutPort.addStudentToCourse(
       AddStudentToCourseCommand(
         matriculationNumber = matriculationNumber,
         courseId = courseId,
-        subscriptionDate = subscriptionDate
+        subscriptionDate = subscriptionDate,
+        courseStartDate = courseStart,
+        courseEndDate = courseEnd
       )
     )
   }

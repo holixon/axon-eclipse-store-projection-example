@@ -39,7 +39,5 @@ logging:
     io.holixon.example.axon.eclipsestore.infrastructure: INFO # set to DEBUG for Eclipse TokenStore tracking.
     org.springframework.web: INFO # DEBUG
     org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: INFO # set to TRACE for request logging
-    org.atmosphere: WARN # Vaadin should be quiet
     org.springframework.core.annotation.AnnotationTypeMapping: ERROR # Stop warning about Axon Framework doing something wrong in Spring
-
-
+    org.atmosphere: WARN # Vaadin should be quiet

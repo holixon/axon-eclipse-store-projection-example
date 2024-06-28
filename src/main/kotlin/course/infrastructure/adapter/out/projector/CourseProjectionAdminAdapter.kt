@@ -13,13 +13,10 @@ class CourseProjectionAdminAdapter(
 
   companion object: KLogging()
 
-  override fun resetProjection() {
+  override fun resetCourseProjection() {
     logger.info { "[COURSE ADMIN ADAPTER]: There are currently ${courseProjectorRepository.countAll()} courses available." }
     logger.info { "[COURSE ADMIN ADAPTER]: Deleting courses from projection..." }
-    courseProjectorRepository.deleteAll()
-    logger.info { "[COURSE ADMIN ADAPTER]: There are currently ${courseProjectorRepository.countAll()} courses available." }
-    courseProjectorRepository.countAll()
-    logger.info { "[COURSE ADMIN ADAPTER]: Triggering replay for the course projection." }
     processorSupport.replay(CourseProjector.GROUP)
   }
+
 }

@@ -16,7 +16,7 @@ class CourseProjectionQueryHandler(
   }
 
   @QueryHandler(queryName = "findCourseById")
-  fun findCourseById(query: CourseById): Optional<Course> {
-    return Optional.ofNullable(courseProjectionRepository.findById(query.id))
+  fun findCourseById(query: CourseById): Course? {
+    return courseProjectionRepository.findByIdOrNull(query.id)
   }
 }

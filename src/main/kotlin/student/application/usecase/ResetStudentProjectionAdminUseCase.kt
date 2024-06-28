@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class ResetStudentProjectionAdminUseCase(
   private val studentProjectionAdminOutPort: StudentProjectionAdminOutPort,
-  private val timetableProjectionAdminOutPort: TimetableProjectionAdminOutPort,
-
+  private val timetableProjectionAdminOutPort: TimetableProjectionAdminOutPort
   ) : ResetStudentProjectionAdminInPort {
 
   override fun resetStudentProjection() {

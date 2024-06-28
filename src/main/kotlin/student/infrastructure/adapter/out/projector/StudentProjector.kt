@@ -28,7 +28,8 @@ class StudentProjector(
         matriculationNumber = event.matriculationNumber,
         firstName = event.person.firstName,
         lastName = event.person.lastName,
-        year = event.year
+        start = event.start,
+        end = event.end
       )
     )
   }

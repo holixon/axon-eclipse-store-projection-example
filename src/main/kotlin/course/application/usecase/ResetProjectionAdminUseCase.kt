@@ -10,6 +10,6 @@ class ResetProjectionAdminUseCase(
 ) : ResetCourseProjectionAdminInPort {
 
   override fun resetCourseProjection() {
-    courseProjectionAdminOutPort.resetProjection()
+    courseProjectionAdminOutPort.resetCourseProjection()
   }
 }

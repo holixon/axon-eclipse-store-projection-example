@@ -5,8 +5,10 @@ import io.holixon.example.university.course.infrastructure.support.eclipsestore.
 import io.holixon.example.university.course.infrastructure.support.eclipsestore.PersistentMapBasedRepository
 import io.holixon.example.university.course.infrastructure.support.eclipsestore.StorageRoot
 
-class CourseProjectorRepositoryImpl(storageRootSupplier: () -> StorageRoot) : CourseProjectorRepository, PersistentMapBasedRepository<String, Course>(
-  storageRootSupplier = storageRootSupplier,
-  config = EclipseStoreRepositoryConfig(name = "courses"),
-  idExtractor = { it.id }
-)
+class CourseProjectorRepositoryImpl(storageRootSupplier: () -> StorageRoot) :
+  CourseProjectorRepository,
+  PersistentMapBasedRepository<String, Course>(
+    storageRootSupplier = storageRootSupplier,
+    config = EclipseStoreRepositoryConfig(name = "courses"),
+    idExtractor = { it.id }
+  )

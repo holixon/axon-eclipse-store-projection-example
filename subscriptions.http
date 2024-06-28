@@ -1,0 +1,77 @@
+### Get all courses
+GET http://localhost:8091/courses
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 200, `Response status is not 200, but ${response.status}`);
+  });
+  client.test("Content-Type is application/json", () => {
+    const contentType = response.headers.valueOf("content-type");
+    client.assert(contentType == "application/json",
+      `Expected Content-Type is application/json, but actual is ${contentType}`)
+  })
+
+  const courses = response.body;
+  const course = jsonPath(courses, "$[?(@.name == 'Nuclear Power I' && @.start == '2028-02-01')]");
+  const courseId = jsonPath(course, "$[0].id")
+  console.log("Course id is", courseId, "of", jsonPath(course, "$[0].name"));
+  client.global.set("courseId", courseId);
+
+%}
+
+### Retrieve students
+// @no-log
+GET http://localhost:8091/students
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 200, `Response status is not 200, but ${response.status}`);
+  });
+  client.test("Content-Type is application/json", () => {
+    const contentType = response.headers.valueOf("content-type");
+    client.assert(contentType == "application/json",
+      `Expected Content-Type is application/json, but actual is ${contentType}`)
+  })
+
+  const students = response.body;
+  const kermitMatriculationNumbers = jsonPath(students, "$[?(@.firstName == 'Kermit')].matriculationNumber");
+  const kermitMatriculationNumber = jsonPath(kermitMatriculationNumbers, "$[0]");
+  console.log("Kermit matriculation number is", kermitMatriculationNumber);
+  client.global.set("kermitMatriculationNumber", kermitMatriculationNumber);
+
+%}
+
+### Register Kermit for Course
+PUT http://localhost:8091/course-subscriptions
+Content-Type: application/json
+
+{
+  "courseId": "{{ courseId }}",
+  "matriculationNumber": "{{ kermitMatriculationNumber }}"
+}
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 204, `Response status is not 204, but ${response.status}`);
+  });
+%}
+
+### Retrieve Kermits Timetable
+< {%
+  import {wait} from "wait";
+  console.log("waiting 5 secs");
+  wait(5);
+%}
+// @no-log
+GET http://localhost:8091/timetables/{{ kermitMatriculationNumber }}
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 200, `Response status is not 200, but ${response.status}`);
+  });
+  client.test("Content-Type is application/json", () => {
+    const contentType = response.headers.valueOf("content-type");
+    client.assert(contentType == "application/json",
+      `Expected Content-Type is application/json, but actual is ${contentType}`)
+  })
+%}

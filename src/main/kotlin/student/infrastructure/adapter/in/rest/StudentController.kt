@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.*
 import org.springframework.web.bind.annotation.*
 import java.net.URI
-import java.time.Year
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/students")
@@ -28,13 +28,18 @@ class StudentController(
 
   @PostMapping
   fun register(@RequestBody dto: RegisterStudentDto): ResponseEntity<Void> {
-    val matriculationNumber = registerStudentInPort.registerStudent(dto.person, Year.parse(dto.year)).join()
+    val matriculationNumber = registerStudentInPort.registerStudent(dto.person, start = LocalDate.parse(dto.start), end = LocalDate.parse(dto.end)).join()
     return created(URI.create(matriculationNumber)).build()
   }
 
   @GetMapping("/number/{matriculationNumber}")
-  fun getStudentByNumber(@PathVariable matriculationNumber: String): ResponseEntity<Matriculation> {
-    return ok(retrieveMatriculationsInPort.findByNumber(matriculationNumber))
+  fun getStudentByNumber(@PathVariable matriculationNumber: String): ResponseEntity<MatriculationDto> {
+    val dto = retrieveMatriculationsInPort.findByNumber(matriculationNumber)?.toDto()
+    return if (dto != null) {
+      ok(dto)
+    } else {
+      notFound().build()
+    }
   }
 
   @DeleteMapping("/number/{matriculationNumber}")
@@ -49,9 +54,25 @@ class StudentController(
     return noContent().build()
   }
 
+  data class MatriculationDto(
+    val firstName: String,
+    val lastName: String,
+    val matriculationNumber: String,
+    val start: String,
+    val end: String
+  )
 
   data class RegisterStudentDto(
     val person: Person,
-    val year: String
+    val start: String,
+    val end: String
+  )
+
+  fun Matriculation.toDto() = MatriculationDto(
+    firstName = this.firstName,
+    lastName = this.lastName,
+    matriculationNumber = this.matriculationNumber,
+    start = this.start.toString(),
+    end = this.end.toString()
   )
 }

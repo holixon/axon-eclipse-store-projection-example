@@ -8,6 +8,7 @@ import io.holixon.example.university.course.domain.query.Course
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
+import org.axonframework.eventhandling.ResetHandler
 import org.springframework.stereotype.Component
 
 @Component
@@ -37,7 +38,7 @@ class CourseProjector(
 
   @EventHandler
   fun on(event: CourseCapacityChangedEvent) {
-    courseProjectorRepository.findById(event.courseId)?.let {
+    courseProjectorRepository.findByIdOrNull(event.courseId)?.let {
       logger.info { "[COURSE PROJECTOR]: Changing capacity of '${it.name}' to ${event.maxStudents}." }
       courseProjectorRepository.save(
         it.copy(maxCapacity = event.maxStudents)
@@ -47,12 +48,16 @@ class CourseProjector(
 
   @EventHandler
   fun on(event: CourseOccupationChangedEvent) {
-    courseProjectorRepository.findById(event.courseId)?.let {
+    courseProjectorRepository.findByIdOrNull(event.courseId)?.let {
       logger.info { "[COURSE PROJECTOR]: Changing occupation of '${it.name}' to ${event.currentStudents}." }
       courseProjectorRepository.save(
         it.copy(currentStudents = event.currentStudents)
       )
     }
+  }
 
+  @ResetHandler
+  fun reset() {
+    courseProjectorRepository.deleteAll()
   }
 }

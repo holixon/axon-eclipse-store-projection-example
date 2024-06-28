@@ -65,7 +65,7 @@ internal class CourseAggregate() {
       CourseSubscriptionCreatedEvent(
         matriculationNumber = cmd.matriculationNumber,
         courseId = cmd.courseId,
-        subscriptionDate = cmd.subscriptionDate
+        subscriptionDate = cmd.subscriptionDate,
       )
     )
 

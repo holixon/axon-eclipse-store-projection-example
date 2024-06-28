@@ -7,8 +7,9 @@ import io.holixon.example.university.student.domain.query.Matriculation
 
 class MatriculationProjectionRepositoryImpl(
   storageRootSupplier: () -> StorageRoot
-) : MatriculationProjectionRepository, PersistentMapBasedRepository<String, Matriculation>(
-  storageRootSupplier = storageRootSupplier,
-  config = EclipseStoreRepositoryConfig(name = "matriculations"),
-  idExtractor = { it.matriculationNumber }
-)
+) : MatriculationProjectionRepository,
+  PersistentMapBasedRepository<String, Matriculation>(
+    storageRootSupplier = storageRootSupplier,
+    config = EclipseStoreRepositoryConfig(name = "matriculations"),
+    idExtractor = { it.matriculationNumber }
+  )

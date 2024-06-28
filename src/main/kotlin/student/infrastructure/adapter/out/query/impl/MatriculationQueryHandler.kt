@@ -17,7 +17,7 @@ class MatriculationQueryHandler(
 
   @QueryHandler(queryName = "findMatriculationByNumber")
   fun findCourseById(query: MatriculationByNumber): Optional<Matriculation> {
-    return Optional.ofNullable(matriculationProjectionRepository.findById(query.matriculationNumber))
+    return Optional.ofNullable(matriculationProjectionRepository.findByIdOrNull(query.matriculationNumber))
   }
 
 }

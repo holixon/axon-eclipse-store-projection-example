@@ -1,6 +1,7 @@
 package io.holixon.example.university.student.application.port.`in`
 
 import io.holixon.example.university.student.domain.command.Person
+import java.time.LocalDate
 import java.time.Year
 import java.util.concurrent.CompletableFuture
 
@@ -15,5 +16,5 @@ interface RegisterStudentInPort {
    * @param year registration year
    * @return matriculation number.
    */
-  fun registerStudent(person: Person, year: Year): CompletableFuture<String>
+  fun registerStudent(person: Person, start: LocalDate, end: LocalDate): CompletableFuture<String>
 }

@@ -24,12 +24,14 @@ class TimetableProjector(
     val timetable = (timetableProjectorRepository.findByIdOrNull(evt.matriculationNumber) ?: Timetable(matriculationNumber = evt.matriculationNumber)).addCourse(
       evt.courseId
     )
+    logger.info { "[TIMETABLE PROJECTOR]: Student ${evt.matriculationNumber} joined course ${evt.courseId}." }
     timetableProjectorRepository.save(timetable)
   }
 
   @EventHandler
   fun on(evt: StudentLeftCourseEvent) {
     timetableProjectorRepository.findByIdOrNull(evt.matriculationNumber)?.let {
+      logger.info { "[TIMETABLE PROJECTOR]: Student ${evt.matriculationNumber} left course ${evt.courseId}." }
       timetableProjectorRepository.save(it.removeCourse(evt.courseId))
     }
   }

@@ -7,7 +7,7 @@ open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
 ) : BaseStoreRepository<MutableMap<KEY, VALUE>>(
   storageRootSupplier = storageRootSupplier,
   config = config
-) {
+), FullAccessRepository<KEY, VALUE> {
 
   companion object {
     @JvmStatic
@@ -17,15 +17,15 @@ open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
 
   override fun initializeModelInstance(): MutableMap<KEY, VALUE> = mutableMapOf()
 
-  fun findById(id: KEY): VALUE {
+  override fun findById(id: KEY): VALUE {
     return getModelInstance()[id] ?: throw NoSuchElementException("No element for id $id was found.")
   }
 
-  fun findByIdOrNull(id: KEY): VALUE? {
+  override fun findByIdOrNull(id: KEY): VALUE? {
     return getModelInstance()[id]
   }
 
-  fun findAll(): List<VALUE> {
+  override fun findAll(): List<VALUE> {
     return getModelInstance().values.toList()
   }
 
@@ -36,7 +36,7 @@ open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
     return value
   }
 
-  open fun save(value: VALUE): VALUE {
+  override fun save(value: VALUE): VALUE {
     val id = try {
       idExtractor.invoke(value)
     } catch (e: NotImplementedError) {
@@ -45,20 +45,20 @@ open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
     return save(id = id, value = value)
   }
 
-  open fun deleteById(id: KEY): VALUE? {
+  override fun deleteById(id: KEY): VALUE? {
     val instance = getModelInstance()
     val value = instance.remove(id)
     modifyModelInstance(instance)
     return value
   }
 
-  open fun deleteAll() {
+  override fun deleteAll() {
     val instance = getModelInstance()
     instance.clear()
     modifyModelInstance(instance)
   }
 
-  fun countAll(): Int {
+  override fun countAll(): Int {
     val instance = getModelInstance()
     return instance.size
   }

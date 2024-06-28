@@ -5,6 +5,7 @@ import io.holixon.example.university.student.application.port.out.RegisterStuden
 import io.holixon.example.university.student.application.port.out.StudentCommandOutPort
 import io.holixon.example.university.student.domain.command.Person
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 import java.time.Year
 import java.util.concurrent.CompletableFuture
 
@@ -13,13 +14,13 @@ class RegisterStudentUseCase(
   val studentCommandOutPort: StudentCommandOutPort,
   val matriculationNumberGenerator: MatriculationNumberGenerator
 ) : RegisterStudentInPort {
-  override fun registerStudent(person: Person, year: Year): CompletableFuture<String> {
+  override fun registerStudent(person: Person, start: LocalDate, end: LocalDate): CompletableFuture<String> {
     val number = matriculationNumberGenerator.generateMatriculationNumber()
     return studentCommandOutPort.registerStudent(
       RegisterStudentCommand(
         matriculationNumber = number,
         person = person,
-        year = year
+        registration = start to end
       )
     )
   }
