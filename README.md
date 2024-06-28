@@ -13,10 +13,13 @@ a mapping between the in-memory object representation and relational schema.
 [Microstream](https://microstream.one/) [EclipseStore](https://docs.eclipsestore.io/manual/intro/welcome.html) allows to easily store object structure without the object-relational impedance mismatch. This project is an example showing its application.
 
 ## Additional POC / Ideas
-- 
+ 
 - Created a "generic" StorageRoot to be able to put any stuff inside
-- The Courses Projection inserts courses into the root
-- Its token store injects the tracking tokens (supplied small store implementation) 
+- The projections insert courses into the root
+- Its token store injects the tracking tokens (supplied small store implementation)
+- Provided `ReadOnlyRepository<KEY, VALUE>` and `FullAccessRepository<KEY, VALUE>`
+- Provided map-based implementation for the repository with eager loading
+- TODO: provide a lazy-loading map-based repository implementation
 
 ## How to run
 
@@ -24,6 +27,6 @@ a mapping between the in-memory object representation and relational schema.
 - Build application with mvn (`./mvnw clean package`)
 - Run `EclipseStoreProjectingApplication`
 - Open Swagger UI: http://localhost:8091/swagger-ui/index.html
-- Open a schedule controller and create a schedule
+- Open a courses admin controller and create a season
 - Restart application - retrieve courses via courses controller
-- Pay attention to the logs - once the events are stored, they are not replayed afterwards - both the token store and the projection is persistent.
+- Pay attention to the logs - once the events are stored, they are not replayed afterward - both the token store and the projection is persistent.
