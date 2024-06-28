@@ -10,5 +10,6 @@ data class Course(
   val name: String,
   val start: LocalDate,
   val end: LocalDate,
-  val maxCapacity: Int
+  val maxCapacity: Int,
+  val currentStudents: Int
 )

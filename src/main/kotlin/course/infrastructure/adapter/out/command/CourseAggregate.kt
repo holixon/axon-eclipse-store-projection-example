@@ -3,10 +3,9 @@ package io.holixon.example.university.course.infrastructure.adapter.out.command
 import io.holixon.example.university.course.application.port.out.ChangeCourseCapacityCommand
 import io.holixon.example.university.course.application.port.out.CreateCourseCommand
 import io.holixon.example.university.course.application.port.out.SubscribeToCourseCommand
+import io.holixon.example.university.course.application.port.out.UnsubscribeFromCourseCommand
 import io.holixon.example.university.course.domain.command.*
-import io.holixon.example.university.course.domain.event.CourseCapacityChangedEvent
-import io.holixon.example.university.course.domain.event.CourseCreatedEvent
-import io.holixon.example.university.student.domain.event.CourseSubscriptionCreatedEvent
+import io.holixon.example.university.course.domain.event.*
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateCreationPolicy
@@ -44,26 +43,60 @@ internal class CourseAggregate() {
     val newCapacity = courseCapacity.allowChangeCapacity(cmd.maxStudents).getOrThrow()
     AggregateLifecycle.apply(
       CourseCapacityChangedEvent(
-        id = cmd.id,
+        courseId = cmd.id,
         maxStudents = newCapacity.maxStudents,
         currentStudents = newCapacity.currentStudents
       )
     )
   }
+
   @CommandHandler
   fun handle(cmd: SubscribeToCourseCommand) {
+    if (this.courseInfo.isAlreadyStarted(cmd.subscriptionDate)) {
+      throw CourseAlreadyStarted(courseName = this.courseInfo.name, startDate = this.courseInfo.start)
+    }
     if (this.courseCapacity.isFull()) {
       throw CourseFull(this.courseInfo.name, this.courseCapacity.maxStudents)
     }
-    this.courseInfo.ensureNotAlreadyStarted(cmd.subscriptionDate)
-
     if (this.courseSubscriptions.hasStudent(cmd.matriculationNumber)) {
-      throw AlreadySubscribedToCourse(cmd.courseId, cmd.matriculationNumber)
+      throw AlreadySubscribedToCourse(courseName = courseInfo.name, matriculationNumber = cmd.matriculationNumber)
     }
     AggregateLifecycle.apply(
       CourseSubscriptionCreatedEvent(
         matriculationNumber = cmd.matriculationNumber,
-        courseId = cmd.courseId
+        courseId = cmd.courseId,
+        subscriptionDate = cmd.subscriptionDate
+      )
+    )
+
+    AggregateLifecycle.apply(
+      CourseOccupationChangedEvent(
+        courseId = cmd.courseId,
+        currentStudents = courseCapacity.currentStudents
+      )
+    )
+
+  }
+
+  @CommandHandler
+  fun handle(cmd: UnsubscribeFromCourseCommand) {
+    if (this.courseInfo.isAlreadyStarted(cmd.unsubscriptionDate)) {
+      throw CourseAlreadyStarted(courseName = this.courseInfo.name, startDate = this.courseInfo.start)
+    }
+    if (!this.courseSubscriptions.hasStudent(cmd.matriculationNumber)) {
+      throw NotSubscribedToCourse(courseName = courseInfo.name, matriculationNumber = cmd.matriculationNumber)
+    }
+    AggregateLifecycle.apply(
+      CourseSubscriptionRemovedEvent(
+        matriculationNumber = cmd.matriculationNumber,
+        courseId = cmd.courseId,
+        unsubscriptionDate = cmd.unsubscriptionDate
+      )
+    )
+    AggregateLifecycle.apply(
+      CourseOccupationChangedEvent(
+        courseId = cmd.courseId,
+        currentStudents = courseCapacity.currentStudents
       )
     )
   }
@@ -83,9 +116,14 @@ internal class CourseAggregate() {
 
   @EventSourcingHandler
   fun on(event: CourseSubscriptionCreatedEvent) {
-    this.courseSubscriptions.addStudent(matriculationNumber = event.matriculationNumber)
+    this.courseSubscriptions = this.courseSubscriptions.addStudent(matriculationNumber = event.matriculationNumber)
     this.courseCapacity = this.courseCapacity.addStudent()
   }
 
+  @EventSourcingHandler
+  fun on(event: CourseSubscriptionRemovedEvent) {
+    this.courseSubscriptions = this.courseSubscriptions.removeStudent(matriculationNumber = event.matriculationNumber)
+    this.courseCapacity = this.courseCapacity.removeStudent()
+  }
 
 }

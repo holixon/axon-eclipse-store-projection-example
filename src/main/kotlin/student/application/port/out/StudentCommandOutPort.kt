@@ -21,7 +21,23 @@ interface StudentCommandOutPort {
    */
   fun unregisterStudent(command: UnregisterStudentCommand): CompletableFuture<Void>
 
+  fun addStudentToCourse(command: AddStudentToCourseCommand): CompletableFuture<Void>
+  fun removeStudentFromCourse(command: RemoveStudentFromCourseCommand): CompletableFuture<Void>
 }
+
+data class AddStudentToCourseCommand(
+  @TargetAggregateIdentifier
+  val matriculationNumber: String,
+  val courseId: String,
+  val subscriptionDate: LocalDate
+)
+
+data class RemoveStudentFromCourseCommand(
+  @TargetAggregateIdentifier
+  val matriculationNumber: String,
+  val courseId: String,
+  val unsubscriptionDate: LocalDate
+)
 
 data class RegisterStudentCommand(
   @TargetAggregateIdentifier

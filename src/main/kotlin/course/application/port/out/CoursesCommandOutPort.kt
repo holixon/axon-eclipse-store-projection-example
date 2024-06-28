@@ -26,6 +26,12 @@ interface CoursesCommandOutPort {
    * @param command command describing the subscription.
    */
   fun subscribeToCourse(command: SubscribeToCourseCommand): CompletableFuture<Void>
+
+  /**
+   * Student course un-subscription.
+   * @param command command describing un-subscription.
+   */
+  fun unsubscribeFromCourse(command: UnsubscribeFromCourseCommand): CompletableFuture<Void>
 }
 
 /**
@@ -36,6 +42,16 @@ data class SubscribeToCourseCommand(
   val courseId: String,
   val matriculationNumber: String,
   val subscriptionDate: LocalDate
+)
+
+/**
+ * Describes a wish to unsubscribe from course.
+ */
+data class UnsubscribeFromCourseCommand(
+  @TargetAggregateIdentifier
+  val courseId: String,
+  val matriculationNumber: String,
+  val unsubscriptionDate: LocalDate
 )
 
 /**

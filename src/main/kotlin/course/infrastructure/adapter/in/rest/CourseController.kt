@@ -43,7 +43,7 @@ class CourseController(
     return noContent().build()
   }
 
-  data class CourseDto(val id: String, val name: String, val start: String, val end: String, val maxStudents: Int)
+  data class CourseDto(val id: String, val name: String, val start: String, val end: String, val maxStudents: Int, val currentStudents: Int)
   data class CourseCreationDto(val name: String, val start: String, val end: String, val maxStudents: Int)
 
   fun Course.toDto() = CourseDto(
@@ -51,6 +51,7 @@ class CourseController(
     name = this.name,
     start = this.start.toString(),
     end = this.end.toString(),
-    maxStudents = this.maxCapacity
+    maxStudents = this.maxCapacity,
+    currentStudents = this.currentStudents
   )
 }

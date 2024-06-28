@@ -13,13 +13,10 @@ class SubscribeToCourseUseCase(
   val courseCommandOutPort: CoursesCommandOutPort,
   val systemClock: Clock
 ) : SubscribeToCourseInPort {
+
   override fun subscribe(courseId: String, matriculationNumber: String): CompletableFuture<Void> {
     return courseCommandOutPort.subscribeToCourse(
       SubscribeToCourseCommand(matriculationNumber = matriculationNumber, courseId = courseId, subscriptionDate = LocalDate.now(systemClock))
     )
-  }
-
-  override fun confirm(courseId: String, matriculationNumber: String): CompletableFuture<Void> {
-    TODO("Not yet implemented")
   }
 }

@@ -7,6 +7,7 @@ import io.holixon.example.university.student.infrastructure.adapter.out.projecto
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
+import org.axonframework.eventhandling.ResetHandler
 import org.springframework.stereotype.Component
 
 @Component
@@ -38,5 +39,11 @@ class StudentProjector(
       logger.info { "[STUDENT PROJECTOR]: Student unregistered ${it.firstName} ${it.lastName}, ${it.matriculationNumber}." }
       studentProjectorRepository.deleteById(it.matriculationNumber)
     }
+  }
+
+  @ResetHandler
+  fun reset() {
+    logger.info { "[STUDENT PROJECTOR]: Resetting." }
+    studentProjectorRepository.deleteAll()
   }
 }

@@ -17,6 +17,4 @@ interface SubscribeToCourseInPort {
    */
   @Throws(CourseFull::class, CourseAlreadyStarted::class, UnknownCourse::class)
   fun subscribe(courseId: String, matriculationNumber: String): CompletableFuture<Void>
-
-  fun confirm(courseId: String, matriculationNumber: String): CompletableFuture<Void>
 }

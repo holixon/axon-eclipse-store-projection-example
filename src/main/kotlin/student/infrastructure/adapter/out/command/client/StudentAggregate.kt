@@ -1,9 +1,12 @@
 package io.holixon.example.university.student.infrastructure.adapter.out.command.client
 
 import io.holixon.example.university.student.application.port.out.RegisterStudentCommand
+import io.holixon.example.university.student.application.port.out.AddStudentToCourseCommand
 import io.holixon.example.university.student.application.port.out.UnregisterStudentCommand
+import io.holixon.example.university.student.application.port.out.RemoveStudentFromCourseCommand
 import io.holixon.example.university.student.domain.command.Person
-import io.holixon.example.university.student.domain.event.CourseSubscriptionCreatedEvent
+import io.holixon.example.university.student.domain.event.StudentJoinedCourseEvent
+import io.holixon.example.university.student.domain.event.StudentLeftCourseEvent
 import io.holixon.example.university.student.domain.event.StudentRegisteredEvent
 import io.holixon.example.university.student.domain.event.StudentUnregisteredEvent
 import org.axonframework.commandhandling.CommandHandler
@@ -44,10 +47,31 @@ internal class StudentAggregate() {
     AggregateLifecycle.markDeleted()
   }
 
+  @CommandHandler
+  fun handle(cmd: AddStudentToCourseCommand) {
+    AggregateLifecycle.apply(
+      StudentJoinedCourseEvent(
+        matriculationNumber = cmd.matriculationNumber,
+        courseId = cmd.courseId,
+        subscriptionDate = cmd.subscriptionDate
+      )
+    )
+  }
+
+  @CommandHandler
+  fun handle(cmd: RemoveStudentFromCourseCommand) {
+    AggregateLifecycle.apply(
+      StudentLeftCourseEvent(
+        matriculationNumber = cmd.matriculationNumber,
+        courseId = cmd.courseId,
+        unsubscriptionDate = cmd.unsubscriptionDate
+      )
+    )
+  }
+
   @EventSourcingHandler
   fun on(evt: StudentRegisteredEvent) {
     this.matriculationNumber = evt.matriculationNumber
     this.person = evt.person
-
   }
 }

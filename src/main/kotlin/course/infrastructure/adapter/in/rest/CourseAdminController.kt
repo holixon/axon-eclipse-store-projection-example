@@ -1,7 +1,7 @@
 package io.holixon.example.university.course.infrastructure.adapter.`in`.rest
 
 import io.holixon.example.university.course.application.port.`in`.CreateCourseInPort
-import io.holixon.example.university.course.application.port.`in`.ResetProjectionAdminInPort
+import io.holixon.example.university.course.application.port.`in`.ResetCourseProjectionAdminInPort
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.*
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -15,7 +15,7 @@ import java.util.*
 @RequestMapping("/course-admin")
 class CourseAdminController(
   private val createCourseInPort: CreateCourseInPort,
-  private val resetProjectionAdminInPort: ResetProjectionAdminInPort
+  private val resetCourseProjectionAdminInPort: ResetCourseProjectionAdminInPort
 ) {
 
   @PostMapping("/season")
@@ -43,7 +43,7 @@ class CourseAdminController(
 
   @DeleteMapping("/season")
   fun reset(): ResponseEntity<Void> {
-    resetProjectionAdminInPort.resetCourseProjection()
+    resetCourseProjectionAdminInPort.resetCourseProjection()
     return noContent().build()
   }
 

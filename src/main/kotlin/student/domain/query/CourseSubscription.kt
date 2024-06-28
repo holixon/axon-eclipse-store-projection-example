@@ -1,9 +1,11 @@
 package io.holixon.example.university.student.domain.query
 
-/**
- * Represents a subscription to a course.
- */
+import java.time.LocalDate
+
 data class CourseSubscription(
   val courseId: String,
-  val matriculationId: String
+  val courseName: String,
+  val maxStudents: Int,
+  val start: LocalDate,
+  val end: LocalDate
 )

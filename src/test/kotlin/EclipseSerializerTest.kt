@@ -36,7 +36,8 @@ internal class EclipseSerializerTest {
       name = "Math I",
       start = LocalDate.parse("2024-01-01"),
       end = LocalDate.parse("2024-06-15"),
-      maxCapacity = 17
+      maxCapacity = 17,
+      currentStudents = 8
     )
 
 

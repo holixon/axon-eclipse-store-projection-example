@@ -15,10 +15,6 @@ class StudentProjectionAdminAdapter(
 
   override fun resetStudentProjection() {
     logger.info { "[STUDENT ADMIN ADAPTER]: There are currently ${studentProjectorRepository.countAll()} students available." }
-    logger.info { "[STUDENT ADMIN ADAPTER]: Deleting students from projection..." }
-    studentProjectorRepository.deleteAll()
-    logger.info { "[STUDENT ADMIN ADAPTER]: There are currently ${studentProjectorRepository.countAll()} students available." }
-    studentProjectorRepository.countAll()
     logger.info { "[STUDENT ADMIN ADAPTER]: Triggering replay for the student projection." }
     processorSupport.replay(StudentProjector.GROUP)
   }
