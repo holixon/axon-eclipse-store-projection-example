@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: axon-eclipse-store-projection-example
+  servlet:
+    multipart:
+      enabled: false
+
+axon:
+  serializer:
+    events: jackson
+    general: jackson
+    messages: jackson
+
+springdoc:
+  enable-kotlin: true
+  swagger-ui:
+    try-it-out-enabled: true
+    url: /v3/api-docs
+
+server:
+  port: 8091
+  error:
+    whitelabel:
+      enabled:  false
+
+org:
+  eclipse:
+    store:
+      rest:
+        enabled: true
+      root: io.holixon.axon.eclipsestore.root.StorageRoot
+
+vaadin:
+  url-mapping: /storage-console/*
+
+
+logging:
+  level:
+    io.holixon.example.axon.eclipsestore.infrastructure: INFO # set to DEBUG for Eclipse TokenStore tracking.
+    org.springframework.web: INFO # DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: INFO # set to TRACE for request logging
+    org.springframework.core.annotation.AnnotationTypeMapping: ERROR # Stop warning about Axon Framework doing something wrong in Spring
+    org.atmosphere: WARN # Vaadin should be quiet

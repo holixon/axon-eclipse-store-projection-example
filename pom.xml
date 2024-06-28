@@ -5,20 +5,21 @@
   <parent>
     <groupId>io.toolisticon.maven.parent</groupId>
     <artifactId>maven-parent-kotlin-base</artifactId>
-    <version>2024.5.1</version>
+    <version>2024.6.0</version>
     <relativePath/>
   </parent>
 
-  <groupId>io.holixon.example.axon-eclipse-store-projection</groupId>
-  <artifactId>axon-eclipse-store-projection-example</artifactId>
+  <groupId>io.holixon.axon.eclipse-store</groupId>
+  <artifactId>axon-eclipse-store-projection-root</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
   <name>${project.artifactId}</name>
   <description>axon-eclipse-store-projection</description>
   <url>https://github.com/holixon/axon-eclipse-store-projection-example/</url>
 
   <properties>
     <spring-boot.version>3.3.0</spring-boot.version>
-    <eclipsestore.version>1.3.2</eclipsestore.version>
     <assertj.version>3.24.2</assertj.version>
     <mockito.version>5.3.1</mockito.version>
   </properties>
@@ -42,6 +43,11 @@
     </dependencies>
   </dependencyManagement>
 
+  <modules>
+    <module>core</module>
+    <module>example</module>
+  </modules>
+
   <dependencies>
     <!-- KOTLIN -->
     <dependency>
@@ -57,53 +63,6 @@
       <artifactId>kotlin-logging-jvm</artifactId>
       <version>${kotlin-logging.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.axonframework</groupId>
-      <artifactId>axon-spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.store</groupId>
-      <artifactId>integrations-spring-boot3</artifactId>
-      <version>${eclipsestore.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.store</groupId>
-      <artifactId>integrations-spring-boot3-console</artifactId>
-      <version>${eclipsestore.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.store</groupId>
-      <artifactId>storage-restservice-springboot</artifactId>
-      <version>${eclipsestore.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.serializer</groupId>
-      <artifactId>serializer</artifactId>
-      <version>${eclipsestore.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.store</groupId>
-      <artifactId>afs-sql</artifactId>
-      <version>${eclipsestore.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.5.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-kotlin</artifactId>
-    </dependency>
-
 
     <!-- TEST -->
     <dependency>
@@ -151,6 +110,19 @@
             </compilerPlugins>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>repackage</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -165,19 +137,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
