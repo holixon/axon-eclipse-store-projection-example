@@ -1,10 +1,8 @@
 package io.holixon.example.university.course.infrastructure.adapter.`in`.rest
 
 import io.holixon.example.university.course.application.port.`in`.CreateCourseInPort
-import io.holixon.example.university.course.application.port.`in`.ResetCourseProjectionAdminInPort
 import org.springframework.http.ResponseEntity
-import org.springframework.http.ResponseEntity.*
-import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.http.ResponseEntity.noContent
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -12,13 +10,12 @@ import java.time.LocalDate
 import java.util.*
 
 @RestController
-@RequestMapping("/course-admin")
+@RequestMapping("/course-admin/season")
 class CourseAdminController(
   private val createCourseInPort: CreateCourseInPort,
-  private val resetCourseProjectionAdminInPort: ResetCourseProjectionAdminInPort
 ) {
 
-  @PostMapping("/season")
+  @PostMapping
   fun createCourses(): ResponseEntity<Void> {
 
     val startOfSeason0 = LocalDate.parse("2024-02-01")
@@ -45,12 +42,6 @@ class CourseAdminController(
     createCourseInPort.createCourse(UUID.randomUUID().toString(), "Optics I", 19, startOfSeason2, endOfSeason2)
     createCourseInPort.createCourse(UUID.randomUUID().toString(), "Nuclear Power II", 1, startOfSeason2, endOfSeason2)
 
-    return noContent().build()
-  }
-
-  @DeleteMapping("/season")
-  fun reset(): ResponseEntity<Void> {
-    resetCourseProjectionAdminInPort.resetCourseProjection()
     return noContent().build()
   }
 

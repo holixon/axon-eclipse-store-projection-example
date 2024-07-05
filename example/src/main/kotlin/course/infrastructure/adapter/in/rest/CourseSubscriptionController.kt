@@ -16,7 +16,7 @@ class CourseSubscriptionController(
   val unsubscribeFromCourseInPort: UnsubscribeFromCourseInPort
 ) {
 
-  companion object: KLogging()
+  companion object : KLogging()
 
   @PutMapping
   fun create(@Valid @RequestBody @Nonnull dto: SubscribeToCourseDto): ResponseEntity<Void> {

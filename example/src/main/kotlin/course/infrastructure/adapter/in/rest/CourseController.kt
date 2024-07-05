@@ -2,11 +2,10 @@ package io.holixon.example.university.course.infrastructure.adapter.`in`.rest
 
 import io.holixon.example.university.course.application.port.`in`.CreateCourseInPort
 import io.holixon.example.university.course.application.port.`in`.ModifyCourseInPort
-import io.holixon.example.university.course.application.port.`in`.RetrieveCoursesInPort
-import io.holixon.example.university.course.domain.query.Course
 import mu.KLogging
 import org.springframework.http.ResponseEntity
-import org.springframework.http.ResponseEntity.*
+import org.springframework.http.ResponseEntity.created
+import org.springframework.http.ResponseEntity.noContent
 import org.springframework.web.bind.annotation.*
 import java.net.URI
 import java.time.LocalDate
@@ -17,19 +16,8 @@ import java.util.*
 class CourseController(
   private val createCourseInPort: CreateCourseInPort,
   private val modifyCourseInPort: ModifyCourseInPort,
-  private val retrieveCoursesInPort: RetrieveCoursesInPort
 ) {
-  companion object: KLogging()
-
-  @GetMapping
-  fun getCourses(): ResponseEntity<List<CourseDto>> {
-    return ok(retrieveCoursesInPort.getAllCourses().map { it.toDto() })
-  }
-
-  @GetMapping("/{id}")
-  fun getCourseById(@PathVariable("id") id: String): ResponseEntity<CourseDto> {
-    return ok(retrieveCoursesInPort.getCourseById(id)?.toDto())
-  }
+  companion object : KLogging()
 
   @PutMapping
   fun create(dto: CourseCreationDto): ResponseEntity<Void> {
@@ -45,15 +33,6 @@ class CourseController(
     return noContent().build()
   }
 
-  data class CourseDto(val id: String, val name: String, val start: String, val end: String, val maxStudents: Int, val currentStudents: Int)
   data class CourseCreationDto(val name: String, val start: String, val end: String, val maxStudents: Int)
 
-  fun Course.toDto() = CourseDto(
-    id = this.id,
-    name = this.name,
-    start = this.start.toString(),
-    end = this.end.toString(),
-    maxStudents = this.maxCapacity,
-    currentStudents = this.currentStudents
-  )
 }

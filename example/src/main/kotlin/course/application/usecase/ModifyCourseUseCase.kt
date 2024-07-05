@@ -1,7 +1,7 @@
 package io.holixon.example.university.course.application.usecase
 
-import io.holixon.example.university.course.application.port.out.ChangeCourseCapacityCommand
 import io.holixon.example.university.course.application.port.`in`.ModifyCourseInPort
+import io.holixon.example.university.course.application.port.out.ChangeCourseCapacityCommand
 import io.holixon.example.university.course.application.port.out.CoursesCommandOutPort
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
