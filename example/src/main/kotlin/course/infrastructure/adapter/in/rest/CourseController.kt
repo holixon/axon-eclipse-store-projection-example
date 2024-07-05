@@ -4,6 +4,7 @@ import io.holixon.example.university.course.application.port.`in`.CreateCourseIn
 import io.holixon.example.university.course.application.port.`in`.ModifyCourseInPort
 import io.holixon.example.university.course.application.port.`in`.RetrieveCoursesInPort
 import io.holixon.example.university.course.domain.query.Course
+import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.*
 import org.springframework.web.bind.annotation.*
@@ -18,6 +19,7 @@ class CourseController(
   private val modifyCourseInPort: ModifyCourseInPort,
   private val retrieveCoursesInPort: RetrieveCoursesInPort
 ) {
+  companion object: KLogging()
 
   @GetMapping
   fun getCourses(): ResponseEntity<List<CourseDto>> {

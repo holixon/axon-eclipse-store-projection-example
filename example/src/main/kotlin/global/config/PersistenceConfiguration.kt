@@ -1,4 +1,4 @@
-package io.holixon.example.university.course.infrastructure.config
+package io.holixon.example.university.global.config
 
 import io.holixon.axon.eclipsestore.root.StorageRoot
 import org.eclipse.store.integrations.spring.boot.types.configuration.EclipseStoreProperties

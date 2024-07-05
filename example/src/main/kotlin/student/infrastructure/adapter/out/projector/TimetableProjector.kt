@@ -2,6 +2,7 @@ package io.holixon.example.university.student.infrastructure.adapter.out.project
 
 import io.holixon.example.university.student.domain.event.StudentJoinedCourseEvent
 import io.holixon.example.university.student.domain.event.StudentLeftCourseEvent
+import io.holixon.example.university.student.domain.event.StudentRegisteredEvent
 import io.holixon.example.university.student.domain.query.Timetable
 import io.holixon.example.university.student.infrastructure.adapter.out.projector.TimetableProjector.Companion.GROUP
 import mu.KLogging
@@ -20,8 +21,17 @@ class TimetableProjector(
   }
 
   @EventHandler
+  fun on(evt: StudentRegisteredEvent) {
+    timetableProjectorRepository.save(
+      Timetable(matriculationNumber = evt.matriculationNumber)
+    )
+    logger.info { "[TIMETABLE PROJECTOR]: Student ${evt.matriculationNumber} (${evt.person.firstName}) created." }
+  }
+
+
+  @EventHandler
   fun on(evt: StudentJoinedCourseEvent) {
-    val timetable = (timetableProjectorRepository.findByIdOrNull(evt.matriculationNumber) ?: Timetable(matriculationNumber = evt.matriculationNumber)).addCourse(
+    val timetable = (timetableProjectorRepository.findById(evt.matriculationNumber)).addCourse(
       evt.courseId
     )
     logger.info { "[TIMETABLE PROJECTOR]: Student ${evt.matriculationNumber} joined course ${evt.courseId}." }

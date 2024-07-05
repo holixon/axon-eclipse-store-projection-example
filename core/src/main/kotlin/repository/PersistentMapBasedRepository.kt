@@ -2,6 +2,14 @@ package io.holixon.axon.eclipsestore.repository
 
 import io.holixon.axon.eclipsestore.root.StorageRoot
 
+/**
+ * Full access repository backed by a hashmap.
+ * @param KEY identity type.
+ * @param VALUE entity type.
+ * @param storageRootSupplier supplier for the storage root, passed from the infrastructure.
+ * @param config repository configuration (e.g. for providing the repository name).
+ * @param idExtractor extractor function to retrieve identity from the entity.
+ */
 open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
   storageRootSupplier: () -> StorageRoot,
   config: EclipseStoreRepositoryConfig,

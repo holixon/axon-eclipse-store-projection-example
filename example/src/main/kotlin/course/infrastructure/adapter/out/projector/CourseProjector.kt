@@ -5,6 +5,7 @@ import io.holixon.example.university.course.domain.event.CourseCapacityChangedEv
 import io.holixon.example.university.course.domain.event.CourseCreatedEvent
 import io.holixon.example.university.course.domain.event.CourseOccupationChangedEvent
 import io.holixon.example.university.course.domain.query.Course
+import jakarta.annotation.PostConstruct
 import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
@@ -19,6 +20,11 @@ class CourseProjector(
 
   companion object : KLogging() {
     const val GROUP = "CourseProjector"
+  }
+
+  @PostConstruct
+  fun init() {
+    logger.info { "[COURSE PROJECTOR]: Started" }
   }
 
   @EventHandler

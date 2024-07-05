@@ -73,5 +73,12 @@ GET http://localhost:8091/timetables/{{ kermitMatriculationNumber }}
     const contentType = response.headers.valueOf("content-type");
     client.assert(contentType == "application/json",
       `Expected Content-Type is application/json, but actual is ${contentType}`)
-  })
+  });
+  client.test("Kermit is not subscribed", () => {
+    const timetable = response.body;
+    const kermitNuclearPower = jsonPath(timetable, "$.courses[?(@.courseName == 'Nuclear Power I')]");
+    const amount = jsonPath(kermitNuclearPower, "$.length()")
+    client.assert(amount == 0, "Kermit should not be subscribed to Physics II");
+  });
+
 %}

@@ -1,4 +1,4 @@
-package io.holixon.example.university.course.infrastructure.support.eclipsestore
+package io.holixon.example.university.global.support.eclipsestore
 
 import org.eclipse.serializer.configuration.types.Configuration
 import org.eclipse.store.afs.sql.types.SqlDataSourceProvider

@@ -1,5 +1,8 @@
 package io.holixon.example.university.student.domain.query
 
+/**
+ * Read side model to hold a timetable of a single student.
+ */
 data class Timetable(
   val matriculationNumber: String,
   val courses: List<String> = listOf()

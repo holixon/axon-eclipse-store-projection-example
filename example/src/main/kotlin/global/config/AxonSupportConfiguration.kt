@@ -1,8 +1,8 @@
-package io.holixon.example.university.course.infrastructure.config
+package io.holixon.example.university.global.config
 
 import io.holixon.axon.eclipsestore.root.StorageRoot
 import io.holixon.axon.eclipsestore.tokenstore.EclipseStoreTokenStore
-import io.holixon.example.university.course.infrastructure.support.axon.ProcessorSupport
+import io.holixon.example.university.global.support.axon.ProcessorSupport
 import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.eventhandling.tokenstore.TokenStore
 import org.springframework.context.annotation.Bean

@@ -10,7 +10,15 @@ import org.axonframework.eventhandling.tokenstore.UnableToInitializeTokenExcepti
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork
 import java.util.*
 
-class EclipseStoreTokenStore(private val name: String, private val storageRoot: StorageRoot) : TokenStore {
+/**
+ * Axon Token Store implementation for storing tokens of event processor tokens using Eclipse Store.
+ * @param name name of the token store, to support multiple stores.
+ * @param storageRoot storage root provided by the infrastructure.
+ */
+class EclipseStoreTokenStore(
+  private val name: String,
+  private val storageRoot: StorageRoot
+) : TokenStore {
 
   companion object : KLogging() {
     const val TOKEN = "tokenstore-"

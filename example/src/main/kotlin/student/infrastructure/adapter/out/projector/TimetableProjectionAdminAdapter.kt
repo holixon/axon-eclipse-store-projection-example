@@ -1,6 +1,6 @@
 package io.holixon.example.university.student.infrastructure.adapter.out.projector
 
-import io.holixon.example.university.course.infrastructure.support.axon.ProcessorSupport
+import io.holixon.example.university.global.support.axon.ProcessorSupport
 import io.holixon.example.university.student.application.port.out.TimetableProjectionAdminOutPort
 import org.springframework.stereotype.Component
 

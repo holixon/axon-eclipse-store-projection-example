@@ -1,0 +1,83 @@
+### Get all courses
+GET http://localhost:8091/courses
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 200, `Response status is not 200, but ${response.status}`);
+  });
+  client.test("Content-Type is application/json", () => {
+    const contentType = response.headers.valueOf("content-type");
+    client.assert(contentType == "application/json",
+      `Expected Content-Type is application/json, but actual is ${contentType}`)
+  })
+
+  const courses = response.body;
+  const course = jsonPath(courses, "$[?(@.name == 'Physics II' && @.start == '2028-09-01')]");
+  const courseId = jsonPath(course, "$[0].id")
+  console.log("Course id is", courseId, "of", jsonPath(course, "$[0].name"));
+  client.global.set("courseId", courseId);
+
+%}
+
+### Retrieve students
+// @no-log
+GET http://localhost:8091/students
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 200, `Response status is not 200, but ${response.status}`);
+  });
+  client.test("Content-Type is application/json", () => {
+    const contentType = response.headers.valueOf("content-type");
+    client.assert(contentType == "application/json",
+      `Expected Content-Type is application/json, but actual is ${contentType}`)
+  })
+
+  const students = response.body;
+  const piggyMatriculationNumbers = jsonPath(students, "$[?(@.firstName == 'Piggy' && @.start == '2028-09-01')].matriculationNumber");
+  const piggyMatriculationNumber = jsonPath(piggyMatriculationNumbers, "$[0]");
+  console.log("Piggy matriculation number is", piggyMatriculationNumber);
+  client.global.set("piggyMatriculationNumber", piggyMatriculationNumber);
+
+%}
+
+### Register Piggy for Course
+PUT http://localhost:8091/course-subscriptions
+Content-Type: application/json
+
+{
+  "courseId": "{{ courseId }}",
+  "matriculationNumber": "{{ piggyMatriculationNumber }}"
+}
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 204, `Response status is not 204, but ${response.status}`);
+  });
+%}
+
+### Retrieve Piggy Timetable
+< {%
+  import {wait} from "wait";
+  console.log("waiting 5 secs");
+  wait(5);
+%}
+// @no-log
+GET http://localhost:8091/timetables/{{ piggyMatriculationNumber }}
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 200, `Response status is not 200, but ${response.status}`);
+  });
+  client.test("Content-Type is application/json", () => {
+    const contentType = response.headers.valueOf("content-type");
+    client.assert(contentType == "application/json",
+      `Expected Content-Type is application/json, but actual is ${contentType}`);
+  });
+  client.test("Piggy is subscribed", () => {
+    const timetable = response.body;
+    const piggyPhysics = jsonPath(timetable, "$.courses[?(@.courseName == 'Physics II')]");
+    const amount = jsonPath(piggyPhysics, "$.length()")
+    client.assert(amount == 1, "Piggy should be subscribed to Physics II");
+  });
+%}

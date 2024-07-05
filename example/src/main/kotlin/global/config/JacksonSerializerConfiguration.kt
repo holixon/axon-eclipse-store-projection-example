@@ -1,4 +1,4 @@
-package io.holixon.example.university.course.infrastructure.config
+package io.holixon.example.university.global.config
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper

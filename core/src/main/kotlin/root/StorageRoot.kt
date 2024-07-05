@@ -4,6 +4,9 @@ import mu.KLogging
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager
 
 
+/**
+ * Default storage root using a map of named elements.
+ */
 @Suppress("UNCHECKED_CAST")
 class StorageRoot {
 

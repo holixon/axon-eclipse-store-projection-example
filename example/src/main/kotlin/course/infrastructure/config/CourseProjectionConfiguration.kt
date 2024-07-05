@@ -16,7 +16,10 @@ import org.springframework.context.annotation.Configuration
 class CourseProjectionConfiguration {
 
   @Autowired
-  fun configureCoursesProcessor(eventProcessingConfigurer: EventProcessingConfigurer, tokenStore: TokenStore) {
+  fun configureCoursesProcessor(
+    eventProcessingConfigurer: EventProcessingConfigurer,
+    tokenStore: TokenStore
+  ) {
     eventProcessingConfigurer.registerTokenStore(CourseProjector.GROUP) { tokenStore }
   }
 

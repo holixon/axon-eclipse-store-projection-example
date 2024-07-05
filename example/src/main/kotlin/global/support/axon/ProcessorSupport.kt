@@ -1,4 +1,4 @@
-package io.holixon.example.university.course.infrastructure.support.axon
+package io.holixon.example.university.global.support.axon
 
 import mu.KLogging
 import org.axonframework.config.EventProcessingConfiguration

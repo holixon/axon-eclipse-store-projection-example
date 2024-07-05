@@ -2,6 +2,13 @@
 // @no-log
 POST http://localhost:8091/course-admin/season
 
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 204, `Response status is not 204, but ${response.status}`);
+  });
+
+%}
+
 ### Get all courses
 < {%
   import {wait} from "wait";
@@ -18,7 +25,13 @@ GET http://localhost:8091/courses
     const contentType = response.headers.valueOf("content-type");
     client.assert(contentType == "application/json",
       `Expected Content-Type is application/json, but actual is ${contentType}`)
-  })
+  });
+
+  const courses = response.body;
+  const courseCount = jsonPath(courses, "$.length()");
+  client.test("Should have courses", () => {
+    client.assert(courseCount != 0, "Expected to have some courses available.")
+  });
 %}
 
 
@@ -37,6 +50,13 @@ Content-Type: application/json
   "start": "2024-02-01",
   "end": "2024-07-15"
 }
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 201, `Response status is not 201, but ${response.status}`);
+  });
+
+%}
+
 
 ### Register piggy
 // @no-log
@@ -50,9 +70,17 @@ Content-Type: application/json
     "birthday": "1985-06-01",
     "birthPlace": "Los Angeles"
   },
-  "start": "2024-09-01",
-  "end": "2025-01-31"
+  "start": "2028-09-01",
+  "end": "2029-01-31"
 }
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 201, `Response status is not 201, but ${response.status}`);
+  });
+
+%}
+
 
 ### Retrieve students
 < {%
@@ -71,5 +99,12 @@ GET http://localhost:8091/students
     const contentType = response.headers.valueOf("content-type");
     client.assert(contentType == "application/json",
       `Expected Content-Type is application/json, but actual is ${contentType}`)
-  })
+  });
+
+  const students = response.body;
+  const studentCount = jsonPath(students, "$.length()");
+  client.test("Should have students", () => {
+    client.assert(studentCount != 0, "Expected to have some students available.")
+  });
+
 %}
