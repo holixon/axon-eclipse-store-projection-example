@@ -1,6 +1,6 @@
 axoniq:
   axonserver:
-    name: eventstore-transformations-local
+    name: university-eclipse-store-local
     hostname: localhost
     standalone: true
     accesscontrol:
@@ -8,6 +8,6 @@ axoniq:
     devmode:
       enabled: true
     event:
-      segment-size: 1000000 # 1mb
+      segment-size: 1000000 # 1mb for small segments
     snapshot:
-      segment-size: 1000000 # 1mb
+      segment-size: 1000000 # 1mb for small segments

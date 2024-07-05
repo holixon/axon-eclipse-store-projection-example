@@ -9,7 +9,7 @@ POST http://localhost:8091/course-admin/season
 
 %}
 
-### Get all courses
+### Get all coursestrue
 < {%
   import {wait} from "wait";
   console.log("waiting 5 secs");

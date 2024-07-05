@@ -1,6 +1,7 @@
 package io.holixon.axon.eclipsestore.repository
 
 import io.holixon.axon.eclipsestore.root.StorageRoot
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Full access repository backed by a hashmap.
@@ -25,7 +26,7 @@ open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
   }
 
 
-  override fun initializeModelInstance(): MutableMap<KEY, VALUE> = mutableMapOf()
+  override fun initializeModelInstance(): ConcurrentHashMap<KEY, VALUE> = ConcurrentHashMap()
 
   override fun findById(id: KEY): VALUE {
     return getModelInstance()[id] ?: throw NoSuchElementException("No element for id $id was found.")

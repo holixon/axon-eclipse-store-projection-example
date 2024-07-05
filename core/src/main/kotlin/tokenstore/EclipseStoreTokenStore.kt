@@ -9,6 +9,7 @@ import org.axonframework.eventhandling.tokenstore.UnableToClaimTokenException
 import org.axonframework.eventhandling.tokenstore.UnableToInitializeTokenException
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Axon Token Store implementation for storing tokens of event processor tokens using Eclipse Store.
@@ -28,7 +29,7 @@ class EclipseStoreTokenStore(
   init {
     if (!storageRoot.contains(TOKEN + name)) {
       logger.debug("[TOKEN STORE] No token store ${TOKEN + name} found in storage, initializing a new one")
-      val tokenStore = TokenStore(identifier = UUID.randomUUID().toString(), tokens = mutableMapOf())
+      val tokenStore = TokenStore(identifier = UUID.randomUUID().toString(), tokens = ConcurrentHashMap())
       storageRoot.set(TOKEN + name, tokenStore)
     } else {
       logger.debug { "[TOKEN STORE] Found token store ${TOKEN + name} with the following processors and segments: ${getTokenStore().tokens.toList().joinToString(", ")}." }
@@ -104,13 +105,17 @@ class EclipseStoreTokenStore(
   override fun requiresExplicitSegmentInitialization(): Boolean = true
 
   override fun fetchSegments(processorName: String): IntArray {
-    return getTokenStore().tokens.keys.asSequence().filter { it.processor == processorName }.distinct().map { it.segment }.sorted().toList().toIntArray()
+    return getTokenStore().tokens.keys.asSequence().filter { it.processor == processorName }
+      .distinct()
+      .map { it.segment }
+      .sorted()
+      .toList()
+      .toIntArray()
   }
 
   override fun retrieveStorageIdentifier(): Optional<String> {
     return Optional.of<String>(getTokenStore().identifier)
   }
-
 
   private fun getTokenStore(): TokenStore = storageRoot.get(TOKEN + name)
 
@@ -120,5 +125,5 @@ class EclipseStoreTokenStore(
 
   internal data class ProcessorAndSegment(val processor: String, val segment: Int)
 
-  internal data class TokenStore(val identifier: String, val tokens: MutableMap<ProcessorAndSegment, TrackingToken>)
+  internal data class TokenStore(val identifier: String, val tokens: ConcurrentHashMap<ProcessorAndSegment, TrackingToken>)
 }

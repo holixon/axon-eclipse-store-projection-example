@@ -2,6 +2,7 @@ package io.holixon.axon.eclipsestore.root
 
 import mu.KLogging
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager
+import java.util.concurrent.ConcurrentHashMap
 
 
 /**
@@ -13,7 +14,7 @@ class StorageRoot {
   @Transient
   private lateinit var storageManager: EmbeddedStorageManager
 
-  private val elements: MutableMap<String, Any> = mutableMapOf()
+  private val elements: ConcurrentHashMap<String, Any> = ConcurrentHashMap()
 
   companion object : KLogging() {
     /**
