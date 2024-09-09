@@ -1,13 +1,16 @@
 package io.holixon.example.university.student.infrastructure.config
 
-import io.holixon.axon.eclipsestore.root.StorageRoot
+import io.holixon.axon.eclipsestore.root.StorageRootSupplier
+import io.holixon.axon.eclipsestore.tokenstore.EclipseStoreTokenStore
+import io.holixon.example.university.global.config.AxonSupportConfiguration.Companion.TOKEN_STORE_NAME
 import io.holixon.example.university.student.infrastructure.adapter.out.projector.TimetableProjector
 import io.holixon.example.university.student.infrastructure.adapter.out.projector.TimetableProjectorRepository
 import io.holixon.example.university.student.infrastructure.adapter.out.projector.TimetableProjectorRepositoryImpl
 import io.holixon.example.university.student.infrastructure.adapter.out.query.impl.TimetableProjectionRepository
 import io.holixon.example.university.student.infrastructure.adapter.out.query.impl.TimetableProjectionRepositoryImpl
+import mu.KLogging
 import org.axonframework.config.EventProcessingConfigurer
-import org.axonframework.eventhandling.tokenstore.TokenStore
+import org.axonframework.eventhandling.TrackingEventProcessorConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,23 +18,31 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class TimetableProjectionConfiguration {
 
-  @Bean
-  fun timetableProjectionReadOnlyRepository(
-    storageRoot: StorageRoot
-  ): TimetableProjectionRepository = TimetableProjectionRepositoryImpl(
-    storageRootSupplier = { storageRoot }
-  )
+  companion object : KLogging()
 
   @Autowired
-  fun configureTimetableProcessor(eventProcessingConfigurer: EventProcessingConfigurer, tokenStore: TokenStore) {
-    eventProcessingConfigurer.registerTokenStore(TimetableProjector.GROUP) { tokenStore }
+  fun configureTimetableProcessor(eventProcessingConfigurer: EventProcessingConfigurer, storageRootSupplier: StorageRootSupplier) {
+    logger.info { "Initialized student projection. Processor is not auto-started." }
+    eventProcessingConfigurer.registerTrackingEventProcessorConfiguration { _ ->
+      TrackingEventProcessorConfiguration.forSingleThreadedProcessing().andAutoStart(false)
+    }
+    eventProcessingConfigurer.registerTokenStore(TimetableProjector.GROUP) {
+      EclipseStoreTokenStore(name = TOKEN_STORE_NAME, storageRootSupplier = storageRootSupplier)
+    }
   }
 
   @Bean
+  fun timetableProjectionReadOnlyRepository(
+    storageRootSupplier: StorageRootSupplier
+  ): TimetableProjectionRepository = TimetableProjectionRepositoryImpl(
+    storageRootSupplier = storageRootSupplier
+  )
+
+  @Bean
   fun timetableProjectorRepository(
-    storageRoot: StorageRoot
+    storageRootSupplier: StorageRootSupplier
   ): TimetableProjectorRepository = TimetableProjectorRepositoryImpl(
-    storageRootSupplier = { storageRoot }
+    storageRootSupplier = storageRootSupplier
   )
 
 

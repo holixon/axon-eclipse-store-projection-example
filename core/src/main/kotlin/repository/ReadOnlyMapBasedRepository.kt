@@ -1,12 +1,12 @@
 package io.holixon.axon.eclipsestore.repository
 
-import io.holixon.axon.eclipsestore.root.StorageRoot
+import io.holixon.axon.eclipsestore.root.StorageRootSupplier
 
 /**
  * Read only repository implementation implemented as a facade of PersistentMapBasedRepository.
  */
 open class ReadOnlyMapBasedRepository<KEY : Any, VALUE : Any>(
-  storageRootSupplier: () -> StorageRoot,
+  storageRootSupplier: StorageRootSupplier,
   config: EclipseStoreRepositoryConfig,
   idExtractor: (VALUE) -> KEY
 ) : PersistentMapBasedRepository<KEY, VALUE>(

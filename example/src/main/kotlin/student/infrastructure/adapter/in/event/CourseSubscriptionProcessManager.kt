@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component
 class CourseSubscriptionProcessManager {
 
   companion object: KLogging() {
-    const val GROUP = "course-subscription";
+    const val GROUP = "CourseSubscriptionProcessManager";
   }
 
   @Inject

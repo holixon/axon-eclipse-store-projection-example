@@ -1,5 +1,6 @@
 package io.holixon.axon.eclipsestore.tokenstore
 
+import io.holixon.axon.eclipsestore.root.StorageRootSupplier
 import io.holixon.axon.eclipsestore.root.StorageRoot
 import mu.KLogging
 import org.axonframework.eventhandling.GlobalSequenceTrackingToken
@@ -18,22 +19,39 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class EclipseStoreTokenStore(
   private val name: String,
-  private val storageRoot: StorageRoot
+  private val storageRootSupplier: StorageRootSupplier
 ) : TokenStore {
+
+  private lateinit var storageRoot: StorageRoot
+  private val identifier: String = initializeIdentifier()
 
   companion object : KLogging() {
     const val TOKEN = "tokenstore-"
     val NULL_TOKEN = GlobalSequenceTrackingToken(-1L)
+
+    /**
+     * This method is responsible for
+     */
+    private fun initializeIdentifier(): String {
+      return UUID.randomUUID().toString()
+    }
+
   }
 
-  init {
-    if (!storageRoot.contains(TOKEN + name)) {
-      logger.debug("[TOKEN STORE] No token store ${TOKEN + name} found in storage, initializing a new one")
-      val tokenStore = TokenStore(identifier = UUID.randomUUID().toString(), tokens = ConcurrentHashMap())
-      storageRoot.set(TOKEN + name, tokenStore)
-    } else {
-      logger.debug { "[TOKEN STORE] Found token store ${TOKEN + name} with the following processors and segments: ${getTokenStore().tokens.toList().joinToString(", ")}." }
+
+  private fun initializeRoot(): StorageRoot {
+    if (!this::storageRoot.isInitialized) {
+      this.storageRoot = storageRootSupplier.invoke()
+      if (!storageRoot.contains(TOKEN + name)) {
+        logger.debug("[TOKEN STORE] No token store ${TOKEN + name} found in storage, initializing a new one")
+        val tokenStore = TokenStore(identifier = identifier, tokens = ConcurrentHashMap())
+        storageRoot.set(TOKEN + name, tokenStore)
+      } else {
+        logger.debug { "[TOKEN STORE] Found token store ${TOKEN + name} with the following processors and segments: ${getTokenStore().tokens.toList().joinToString(", ")}." }
+      }
     }
+
+    return storageRoot
   }
 
   @Throws(UnableToClaimTokenException::class)
@@ -114,13 +132,13 @@ class EclipseStoreTokenStore(
   }
 
   override fun retrieveStorageIdentifier(): Optional<String> {
-    return Optional.of<String>(getTokenStore().identifier)
+    return Optional.of(identifier)
   }
 
-  private fun getTokenStore(): TokenStore = storageRoot.get(TOKEN + name)
+  private fun getTokenStore(): TokenStore = initializeRoot().get(TOKEN + name)
 
   private fun changeTokens(tokenStore: TokenStore) {
-    storageRoot.append(tokenStore.tokens)
+    initializeRoot().append(tokenStore.tokens)
   }
 
   internal data class ProcessorAndSegment(val processor: String, val segment: Int)

@@ -2,3 +2,4 @@ org:
   eclipse:
     store:
       storage-directory: .storage/default
+      backup-directory: .backup/default

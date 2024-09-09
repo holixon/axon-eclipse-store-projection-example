@@ -1,26 +1,29 @@
 package io.holixon.axon.eclipsestore.repository
 
-import io.holixon.axon.eclipsestore.root.StorageRoot
-import jakarta.annotation.PostConstruct
+import io.holixon.axon.eclipsestore.root.StorageRootSupplier
 
 /**
  * Base class to implement repositories.
  */
 abstract class BaseStoreRepository<T : Any>(
-        private val storageRootSupplier: () -> StorageRoot,
-        val config: EclipseStoreRepositoryConfig = EclipseStoreRepositoryConfig.default()
+  private val storageRootSupplier: StorageRootSupplier,
+  val config: EclipseStoreRepositoryConfig = EclipseStoreRepositoryConfig.default()
 ) {
+
+  private var connected: Boolean = false
 
   /**
    * Stores current repository into store.
    */
-  @PostConstruct
-  fun connect() {
-    val repositoryName = getRepositoryName()
-    val storageRoot = storageRootSupplier.invoke()
-    // initializes
-    if (!storageRoot.contains(repositoryName)) {
-      storageRoot.set(repositoryName, initializeModelInstance())
+  private fun connectIfRequired() {
+    if (!connected) {
+      val repositoryName = getRepositoryName()
+      val storageRoot = storageRootSupplier.invoke()
+      // initializes
+      if (!storageRoot.contains(repositoryName)) {
+        storageRoot.set(repositoryName, initializeModelInstance())
+      }
+      connected = true
     }
   }
 
@@ -35,6 +38,7 @@ abstract class BaseStoreRepository<T : Any>(
    * @return a model instance loaded from root.
    */
   fun getModelInstance(): T {
+    connectIfRequired()
     val storageRoot = storageRootSupplier.invoke()
     return storageRoot.get<T>(getRepositoryName()).also {
       storageRoot.dispose(reuseStorageManager())
@@ -47,6 +51,7 @@ abstract class BaseStoreRepository<T : Any>(
    * @return model instance for further use.
    */
   fun modifyModelInstance(modelInstance: T): T {
+    connectIfRequired()
     val storageRoot = storageRootSupplier.invoke()
     storageRoot.append(value = modelInstance)
     storageRoot.dispose(reuseStorageManager())

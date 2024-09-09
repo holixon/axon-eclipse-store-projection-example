@@ -1,6 +1,6 @@
 package io.holixon.axon.eclipsestore.repository
 
-import io.holixon.axon.eclipsestore.root.StorageRoot
+import io.holixon.axon.eclipsestore.root.StorageRootSupplier
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @param idExtractor extractor function to retrieve identity from the entity.
  */
 open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
-  storageRootSupplier: () -> StorageRoot,
+  storageRootSupplier: StorageRootSupplier,
   config: EclipseStoreRepositoryConfig,
   private val idExtractor: (VALUE) -> KEY = noIdExtractor()
 ) : BaseStoreRepository<MutableMap<KEY, VALUE>>(

@@ -41,3 +41,5 @@ logging:
     org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: INFO # set to TRACE for request logging
     org.springframework.core.annotation.AnnotationTypeMapping: ERROR # Stop warning about Axon Framework doing something wrong in Spring
     org.atmosphere: WARN # Vaadin should be quiet
+    org.axonframework: WARN # quiet
+    io.axoniq.axonserver:  WARN
