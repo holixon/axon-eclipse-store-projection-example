@@ -1,4 +1,4 @@
 org:
   eclipse:
     store:
-      storage-directory: .storage/
+      storage-directory: .storage/default

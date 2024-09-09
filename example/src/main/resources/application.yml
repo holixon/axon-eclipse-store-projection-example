@@ -1,6 +1,6 @@
 spring:
   application:
-    name: axon-eclipse-store-projection-example
+    name: university-example
   servlet:
     multipart:
       enabled: false
