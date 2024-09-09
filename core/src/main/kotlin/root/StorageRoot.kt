@@ -22,7 +22,15 @@ class StorageRoot {
      * @param   storageManager storage manager.
      * @return initialized storage root.
      */
-    fun init(storageManager: EmbeddedStorageManager): StorageRoot {
+    fun init(storageManager: EmbeddedStorageManager, storageCopier: StorageCopier): StorageRoot {
+
+      if (!storageManager.isRunning) {
+        if (storageCopier.storageNotPresent()) {
+          storageCopier.getStorageCopy()
+        }
+        storageManager.start()
+      }
+
       val root = if (storageManager.root() == null) {
         logger.info { "[STORAGE-ROOT]: No storage root found. Initializing new storage root." }
         StorageRoot().apply {
