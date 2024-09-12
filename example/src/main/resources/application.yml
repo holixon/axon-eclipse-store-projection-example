@@ -23,12 +23,6 @@ server:
     whitelabel:
       enabled:  false
 
-org:
-  eclipse:
-    store:
-      rest:
-        enabled: false
-
 vaadin:
   url-mapping: /storage-console/*
 

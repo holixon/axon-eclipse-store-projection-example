@@ -29,7 +29,7 @@ class AxonSupportConfiguration {
   fun scheduler(processorSupport: ProcessorSupport) = StartingScheduler(processorSupport)
 
   class StartingScheduler(private val processorSupport: ProcessorSupport) {
-    @Scheduled(initialDelay = 30_000, fixedDelay = 1000_000_000)
+    @Scheduled(initialDelay = 10_000, fixedDelay = 1000_000_000)
     fun start() {
       logger.info { "Starting processors" }
       processorSupport.startProcessor(CourseSubscriptionProcessManager.GROUP)

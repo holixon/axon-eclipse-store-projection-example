@@ -1,6 +1,9 @@
 org:
   eclipse:
     store:
+      rest:
+        enabled: false
+      auto-start: false
       storage-filesystem:
         sql:
           postgres:

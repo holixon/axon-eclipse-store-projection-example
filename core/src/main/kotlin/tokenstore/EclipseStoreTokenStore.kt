@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Axon Token Store implementation for storing tokens of event processor tokens using Eclipse Store.
  * @param name name of the token store, to support multiple stores.
- * @param storageRoot storage root provided by the infrastructure.
+ * @param storageRootSupplier supplier for storage root provided by the infrastructure.
  */
 class EclipseStoreTokenStore(
   private val name: String,
