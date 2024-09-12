@@ -4,8 +4,12 @@ org:
       rest:
         enabled: false
       auto-start: false
-      storage-directory: .storage/default
-      backup-directory: .backup/default
       auto-create-default-storage: false
       auto-create-default-foundation: false
+      storage-directory: .storage/default
+      backup-directory: .backup/default
 
+holixon:
+  axon-store:
+    support:
+      store-key: ${spring.application.name}

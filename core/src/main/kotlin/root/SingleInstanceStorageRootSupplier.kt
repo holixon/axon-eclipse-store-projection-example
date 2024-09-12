@@ -12,7 +12,8 @@ class SingleInstanceStorageRootSupplier(
   private val eclipseStoreProperties: EclipseStoreProperties,
   private val foundationFactory: EmbeddedStorageFoundationFactory,
   private val managerFactory: EmbeddedStorageManagerFactory,
-  private val queryBus: QueryBus
+  private val queryBus: QueryBus,
+  private val storeProjectionSupportProperties: StoreProjectionSupportProperties
 ) : StorageRootSupplier {
 
   lateinit var root: StorageRoot
@@ -22,6 +23,7 @@ class SingleInstanceStorageRootSupplier(
       if (!this::root.isInitialized) {
         this.root = StorageRoot.init(
           eclipseStoreProperties = eclipseStoreProperties,
+          storeProjectionSupportProperties = storeProjectionSupportProperties,
           queryBus = queryBus,
           managerFactory = managerFactory,
           foundationFactory = foundationFactory

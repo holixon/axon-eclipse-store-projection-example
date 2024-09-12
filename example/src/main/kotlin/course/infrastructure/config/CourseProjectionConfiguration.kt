@@ -1,6 +1,7 @@
 package io.holixon.example.university.course.infrastructure.config
 
 import io.holixon.axon.eclipsestore.root.StorageRootSupplier
+import io.holixon.axon.eclipsestore.tokenstore.ConfigurationSupplier
 import io.holixon.axon.eclipsestore.tokenstore.EclipseStoreTokenStore
 import io.holixon.example.university.course.infrastructure.adapter.out.projector.CourseProjector
 import io.holixon.example.university.course.infrastructure.adapter.out.projector.CourseProjectorRepository
@@ -21,7 +22,11 @@ class CourseProjectionConfiguration {
   companion object : KLogging()
 
   @Autowired
-  fun configureCoursesProcessor(eventProcessingConfigurer: EventProcessingConfigurer, storageRootSupplier: StorageRootSupplier) {
+  fun configureCoursesProcessor(
+    eventProcessingConfigurer: EventProcessingConfigurer,
+    storageRootSupplier: StorageRootSupplier,
+    configurationSupplier: ConfigurationSupplier
+  ) {
 
     logger.info { "Initialized course projection. Processor is not auto-started." }
 
@@ -29,7 +34,7 @@ class CourseProjectionConfiguration {
       TrackingEventProcessorConfiguration.forSingleThreadedProcessing().andAutoStart(false)
     }
     eventProcessingConfigurer.registerTokenStore(CourseProjector.GROUP) {
-      EclipseStoreTokenStore(name = TOKEN_STORE_NAME, storageRootSupplier = storageRootSupplier)
+      EclipseStoreTokenStore(name = TOKEN_STORE_NAME, configurationSupplier = configurationSupplier, storageRootSupplier = storageRootSupplier)
     }
   }
 

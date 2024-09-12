@@ -27,11 +27,13 @@ class StorageRoot {
      * Initialize storage root for / from given storage manager.
      * @param managerFactory storage manager factory.
      * @param foundationFactory foundation factory.
-     * @param eclipseStoreProperties
+     * @param eclipseStoreProperties eclipse properties.
+     * @param storeKey store key.
      * @return initialized storage root.
      */
     fun init(
       eclipseStoreProperties: EclipseStoreProperties,
+      storeProjectionSupportProperties: StoreProjectionSupportProperties,
       managerFactory: EmbeddedStorageManagerFactory,
       foundationFactory: EmbeddedStorageFoundationFactory,
       queryBus: QueryBus
@@ -42,7 +44,7 @@ class StorageRoot {
           logger.info { "[STORAGE-ROOT]: Storage is not initialized." }
           logger.info { "[STORAGE-ROOT]: Querying for a backup." }
           try {
-            val backups = queryBus.queryForSnapshot(ownBackupLocation = eclipseStoreProperties.backupDirectory, currentTokenPosition = null)
+            val backups = queryBus.queryForSnapshot(ownBackupLocation = eclipseStoreProperties.backupDirectory, storeKey = storeProjectionSupportProperties.storeKey)
             logger.info { "[STORAGE-ROOT]: Received ${backups.size} backup responses." }
             backups
               .map { result ->
@@ -85,7 +87,12 @@ class StorageRoot {
 
       // register manually
       logger.info { "[STORAGE-ROOT]: Activating query handler for others." }
-      queryBus.registerQueryHandler(StorageQueryHandler(eclipseStoreProperties))
+      queryBus.registerQueryHandler(
+        StorageQueryHandler(
+          eclipseStoreProperties = eclipseStoreProperties,
+          storeProjectionSupportProperties = storeProjectionSupportProperties
+        )
+      )
 
       root.storageManager = storageManager
       return root

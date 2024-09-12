@@ -14,7 +14,8 @@ import java.util.stream.Collectors
 
 @Component
 class StorageQueryHandler(
-  private val eclipseStoreProperties: EclipseStoreProperties
+  private val eclipseStoreProperties: EclipseStoreProperties,
+  private val storeProjectionSupportProperties: StoreProjectionSupportProperties
 ) {
 
   companion object : KLogging() {
@@ -22,12 +23,12 @@ class StorageQueryHandler(
   }
 
   fun findSnapshot(query: QueryForSnapshot): Snapshot? {
-    logger.info { "ECLIPSE-STORE-SUPPORT: Backup requested from ${query.ownBackupLocation}." }
+    logger.info { "ECLIPSE-STORE-SUPPORT: Backup requested for ${storeProjectionSupportProperties.storeKey} from ${query.ownBackupLocation}." }
     return if (eclipseStoreProperties.backupDirectory == query.ownBackupLocation) {
       logger.info { "ECLIPSE-STORE-SUPPORT: Skipping response to the request of the node with the same backup directory: ${query.ownBackupLocation}." }
       null // that's me asking myself
     } else {
-      if (FileSystemHelper.backupExists(eclipseStoreProperties)) {
+      if (storeProjectionSupportProperties.storeKey == query.storeKey && FileSystemHelper.backupExists(eclipseStoreProperties)) {
         val bytes = Files.toByteArray(
           // FIXME -> deactivate the event processors for the time of snapshot creation.
           // FIXME -> create snapshot on schedule, send them here only
@@ -39,7 +40,7 @@ class StorageQueryHandler(
           bytes = bytes
         )
       } else {
-        logger.warn { "ECLIPSE-STORE-SUPPORT: No backup found." }
+        logger.warn { "ECLIPSE-STORE-SUPPORT: No backup found for ${storeProjectionSupportProperties.storeKey}." }
         null
       }
     }
@@ -53,10 +54,10 @@ fun QueryBus.registerQueryHandler(instance: StorageQueryHandler) {
   ) { message -> instance.findSnapshot(message.payload as QueryForSnapshot) }
 }
 
-fun QueryBus.queryForSnapshot(ownBackupLocation: String, currentTokenPosition: Long?): List<Result<Snapshot>> {
+fun QueryBus.queryForSnapshot(storeKey: String, ownBackupLocation: String): List<Result<Snapshot>> {
   val queryMessage =
     GenericQueryMessage(
-      QueryForSnapshot(ownBackupLocation, currentTokenPosition),
+      QueryForSnapshot(storeKey = storeKey, ownBackupLocation = ownBackupLocation),
       QUERY_NAME,
       ResponseTypes.optionalInstanceOf(Snapshot::class.java)
     )
@@ -77,8 +78,8 @@ fun QueryBus.queryForSnapshot(ownBackupLocation: String, currentTokenPosition: L
 }
 
 data class QueryForSnapshot(
-  val ownBackupLocation: String,
-  val currentTokenPosition: Long?
+  val storeKey: String,
+  val ownBackupLocation: String
 )
 
 data class Snapshot(
