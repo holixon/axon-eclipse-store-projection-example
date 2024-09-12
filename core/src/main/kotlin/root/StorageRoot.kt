@@ -1,6 +1,12 @@
 package io.holixon.axon.eclipsestore.root
 
+import io.holixon.axon.eclipsestore.root.FileSystemHelper.isStorageInitialized
 import mu.KLogging
+import org.axonframework.queryhandling.NoHandlerForQueryException
+import org.axonframework.queryhandling.QueryBus
+import org.eclipse.store.integrations.spring.boot.types.configuration.EclipseStoreProperties
+import org.eclipse.store.integrations.spring.boot.types.factories.EmbeddedStorageFoundationFactory
+import org.eclipse.store.integrations.spring.boot.types.factories.EmbeddedStorageManagerFactory
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager
 import java.util.concurrent.ConcurrentHashMap
 
@@ -19,10 +25,55 @@ class StorageRoot {
   companion object : KLogging() {
     /**
      * Initialize storage root for / from given storage manager.
-     * @param   storageManager storage manager.
+     * @param managerFactory storage manager factory.
+     * @param foundationFactory foundation factory.
+     * @param eclipseStoreProperties eclipse properties.
+     * @param storeKey store key.
      * @return initialized storage root.
      */
-    fun init(storageManager: EmbeddedStorageManager): StorageRoot {
+    fun init(
+      eclipseStoreProperties: EclipseStoreProperties,
+      storeProjectionSupportProperties: StoreProjectionSupportProperties,
+      managerFactory: EmbeddedStorageManagerFactory,
+      foundationFactory: EmbeddedStorageFoundationFactory,
+      queryBus: QueryBus
+    ): StorageRoot {
+
+      val storageManager = synchronized(this) {
+        if (!isStorageInitialized(eclipseStoreProperties)) {
+          logger.info { "[STORAGE-ROOT]: Storage is not initialized." }
+          logger.info { "[STORAGE-ROOT]: Querying for a backup." }
+          try {
+            val backups = queryBus.queryForSnapshot(ownBackupLocation = eclipseStoreProperties.backupDirectory, storeKey = storeProjectionSupportProperties.storeKey)
+            logger.info { "[STORAGE-ROOT]: Received ${backups.size} backup responses." }
+            backups
+              .map { result ->
+                if (result.isFailure) {
+                  throw result.exceptionOrNull()!!
+                } else {
+                  val snapshot = result.getOrThrow()
+                  logger.info { "[STORAGE-ROOT]: Valid response from ${snapshot.location}." }
+                  snapshot.bytes
+                }
+              }.firstOrNull() // in case we didn't get any
+              ?.let { backup ->
+                logger.info { "[STORAGE-ROOT]: Restoring backup to ${eclipseStoreProperties.storageDirectory}." }
+                FileSystemHelper.uncompress(backupZipBytes = backup, targetDir = eclipseStoreProperties.storageDirectory)
+              }
+          } catch (e: Exception) {
+            if (e is NoHandlerForQueryException) {
+              logger.info { "[STORAGE-ROOT]: No backup was available." }
+            } else {
+              logger.error(e) { "[STORAGE-ROOT]: Something went wrong during backup retrieval." }
+            }
+          }
+        }
+
+        logger.info { "[STORAGE-ROOT]: Creating Storage and StorageManager." }
+        val foundation = foundationFactory.createStorageFoundation(eclipseStoreProperties)
+        managerFactory.createStorage(foundation, true) // autostart it right away
+      }
+
       val root = if (storageManager.root() == null) {
         logger.info { "[STORAGE-ROOT]: No storage root found. Initializing new storage root." }
         StorageRoot().apply {
@@ -33,6 +84,16 @@ class StorageRoot {
         logger.info { "[STORAGE-ROOT]: Found existing storage root. Loading it..." }
         storageManager.root() as StorageRoot
       }
+
+      // register manually
+      logger.info { "[STORAGE-ROOT]: Activating query handler for others." }
+      queryBus.registerQueryHandler(
+        StorageQueryHandler(
+          eclipseStoreProperties = eclipseStoreProperties,
+          storeProjectionSupportProperties = storeProjectionSupportProperties
+        )
+      )
+
       root.storageManager = storageManager
       return root
     }
@@ -107,5 +168,16 @@ class StorageRoot {
     if (!reuseStorageManager) {
       storageManager.close()
     }
+  }
+
+  /**
+   * Retrieves storage manager of current root.
+   * @return storage manager.
+   */
+  fun getStorageManager(): EmbeddedStorageManager {
+    if (!this::storageManager.isInitialized) {
+      throw IllegalStateException("Storage manager is not initialized.")
+    }
+    return storageManager
   }
 }

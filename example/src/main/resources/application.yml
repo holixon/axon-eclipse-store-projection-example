@@ -23,13 +23,6 @@ server:
     whitelabel:
       enabled:  false
 
-org:
-  eclipse:
-    store:
-      rest:
-        enabled: true
-      root: io.holixon.axon.eclipsestore.root.StorageRoot
-
 vaadin:
   url-mapping: /storage-console/*
 

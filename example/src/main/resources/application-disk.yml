@@ -1,5 +1,15 @@
 org:
   eclipse:
     store:
+      rest:
+        enabled: false
+      auto-start: false
+      auto-create-default-storage: false
+      auto-create-default-foundation: false
       storage-directory: .storage/default
       backup-directory: .backup/default
+
+holixon:
+  axon-store:
+    support:
+      store-key: ${spring.application.name}

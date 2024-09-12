@@ -1,7 +1,7 @@
 package io.holixon.axon.eclipsestore.tokenstore
 
-import io.holixon.axon.eclipsestore.root.StorageRootSupplier
 import io.holixon.axon.eclipsestore.root.StorageRoot
+import io.holixon.axon.eclipsestore.root.StorageRootSupplier
 import mu.KLogging
 import org.axonframework.eventhandling.GlobalSequenceTrackingToken
 import org.axonframework.eventhandling.TrackingToken
@@ -15,29 +15,21 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Axon Token Store implementation for storing tokens of event processor tokens using Eclipse Store.
  * @param name name of the token store, to support multiple stores.
- * @param storageRoot storage root provided by the infrastructure.
+ * @param storageRootSupplier supplier for storage root provided by the infrastructure.
  */
 class EclipseStoreTokenStore(
   private val name: String,
-  private val storageRootSupplier: StorageRootSupplier
+  private val storageRootSupplier: StorageRootSupplier,
+  private val configurationSupplier: ConfigurationSupplier
 ) : TokenStore {
 
   private lateinit var storageRoot: StorageRoot
-  private val identifier: String = initializeIdentifier()
+  private val identifier: String = configurationSupplier.geCurrentNodeIdentifier()
 
   companion object : KLogging() {
     const val TOKEN = "tokenstore-"
     val NULL_TOKEN = GlobalSequenceTrackingToken(-1L)
-
-    /**
-     * This method is responsible for
-     */
-    private fun initializeIdentifier(): String {
-      return UUID.randomUUID().toString()
-    }
-
   }
-
 
   private fun initializeRoot(): StorageRoot {
     if (!this::storageRoot.isInitialized) {
@@ -50,6 +42,9 @@ class EclipseStoreTokenStore(
         logger.debug { "[TOKEN STORE] Found token store ${TOKEN + name} with the following processors and segments: ${getTokenStore().tokens.toList().joinToString(", ")}." }
       }
     }
+
+
+    // FIXME -> make sure the contained identifier matches the Root identifier.
 
     return storageRoot
   }
@@ -74,6 +69,7 @@ class EclipseStoreTokenStore(
   }
 
   override fun storeToken(token: TrackingToken?, processorName: String, segment: Int) {
+    // TODO: validate token
     logger.debug("[TOKEN STORE] Storing token for $processorName and segment $segment")
     if (CurrentUnitOfWork.isStarted()) {
       CurrentUnitOfWork.get().afterCommit {
