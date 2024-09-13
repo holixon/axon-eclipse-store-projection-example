@@ -16,13 +16,16 @@ import java.util.zip.ZipOutputStream
 object FileSystemHelper {
 
   /**
-   *
+   * Checks if the storage exists.
    */
-  fun isStorageExists(eclipseStoreProperties: EclipseStoreProperties): Boolean {
+  fun storageExists(eclipseStoreProperties: EclipseStoreProperties): Boolean {
     return Files.exists(Path.of(eclipseStoreProperties.storageDirectory))
       && Files.exists(Path.of(eclipseStoreProperties.storageDirectory + "/" + eclipseStoreProperties.typeDictionaryFileName))
   }
 
+  /**
+   * Checks if backup exists.
+   */
   fun backupExists(eclipseStoreProperties: EclipseStoreProperties): Boolean {
     return Files.exists(Path.of(eclipseStoreProperties.backupDirectory))
   }

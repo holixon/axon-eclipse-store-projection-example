@@ -13,16 +13,16 @@ import java.nio.file.Path
 
 @Configuration
 @ComponentScan
-@EnableConfigurationProperties(value = [StoreProjectionSupportProperties::class])
-class StorageRootConfiguration {
+@EnableConfigurationProperties(value = [ProjectionSupportProperties::class])
+class ProjectionSupportConfiguration {
   companion object : KLogging()
 
   @Bean
   fun configurationSupplier(
     axonServerConfiguration: AxonServerConfiguration,
-    storeProjectionSupportProperties: StoreProjectionSupportProperties
+    projectionSupportProperties: ProjectionSupportProperties
   ): ConfigurationSupplier {
-    val storageId = Path.of(storeProjectionSupportProperties.storeProperties.storageDirectory).normalize().toString()
+    val storageId = Path.of(projectionSupportProperties.store.storageDirectory).normalize().toString()
     return object : ConfigurationSupplier {
       override fun clientId(): String = axonServerConfiguration.clientId
       override fun storageId(): String = storageId
@@ -31,5 +31,5 @@ class StorageRootConfiguration {
 
   @Bean
   @Qualifier("axonEclipseStoreProperties")
-  fun axonEclipseStoreProperties(storeProjectionSupportProperties: StoreProjectionSupportProperties): EclipseStoreProperties = storeProjectionSupportProperties.storeProperties
+  fun axonEclipseStoreProperties(projectionSupportProperties: ProjectionSupportProperties): EclipseStoreProperties = projectionSupportProperties.store
 }

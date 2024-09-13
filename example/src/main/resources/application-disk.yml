@@ -4,13 +4,16 @@ org:
       rest:
         enabled: false
 
-holixon:
-  axon-store:
-    support:
-      store-key: ${spring.application.name}
-      store-properties:
-        auto-start: false
-        auto-create-default-storage: false
-        auto-create-default-foundation: false
-        storage-directory: .storage/default
-        backup-directory: .backup/default
+vaadin:
+  url-mapping: /storage-console/*
+
+axon-projection-support:
+  store-key: ${spring.application.name}
+  instance-key: default
+  store:
+    auto-start: false
+    auto-create-default-storage: false
+    auto-create-default-foundation: false
+    storage-directory: .storage/${axon-projection-support.instance-key}
+    backup-directory: .backup/${axon-projection-support.instance-key}
+

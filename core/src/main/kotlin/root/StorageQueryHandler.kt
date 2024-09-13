@@ -13,22 +13,22 @@ import java.util.stream.Collectors
 
 @Component
 class StorageQueryHandler(
-  private val storeProjectionSupportProperties: StoreProjectionSupportProperties
+  private val projectionSupportProperties: ProjectionSupportProperties
 ) {
 
-  private val eclipseStoreProperties = storeProjectionSupportProperties.storeProperties
+  private val eclipseStoreProperties = projectionSupportProperties.store
 
   companion object : KLogging() {
     const val QUERY_NAME = "queryForBackupSnapshot"
   }
 
   fun findSnapshot(query: QueryForSnapshot): Snapshot? {
-    logger.info { "ECLIPSE-STORE-SUPPORT: Backup requested for ${storeProjectionSupportProperties.storeKey} from ${query.ownBackupLocation}." }
-    return if (eclipseStoreProperties.backupDirectory == query.ownBackupLocation) {
-      logger.info { "ECLIPSE-STORE-SUPPORT: Skipping response to the request of the node with the same backup directory: ${query.ownBackupLocation}." }
+    logger.info { "ECLIPSE-STORE-SUPPORT: Backup requested for ${projectionSupportProperties.storeKey} from ${query.instanceKey}." }
+    return if (projectionSupportProperties.instanceKey == query.instanceKey) {
+      logger.info { "ECLIPSE-STORE-SUPPORT: Skipping response to the request of the node with the same instance key: ${query.instanceKey}." }
       null // that's me asking myself
     } else {
-      if (storeProjectionSupportProperties.storeKey == query.storeKey && FileSystemHelper.backupExists(eclipseStoreProperties)) {
+      if (projectionSupportProperties.storeKey == query.storeKey && FileSystemHelper.backupExists(eclipseStoreProperties)) {
         val bytes = Files.toByteArray(
           // FIXME -> deactivate the event processors for the time of snapshot creation.
           // FIXME -> create snapshot on schedule, send them here only
@@ -36,11 +36,11 @@ class StorageQueryHandler(
         )
         logger.info { "ECLIPSE-STORE-SUPPORT: Created backup snapshot, sending it." }
         Snapshot(
-          location = eclipseStoreProperties.backupDirectory,
+          instanceKey = projectionSupportProperties.instanceKey,
           bytes = bytes
         )
       } else {
-        logger.warn { "ECLIPSE-STORE-SUPPORT: No backup found for ${storeProjectionSupportProperties.storeKey}." }
+        logger.warn { "ECLIPSE-STORE-SUPPORT: No backup found for ${projectionSupportProperties.storeKey}." }
         null
       }
     }
@@ -54,10 +54,10 @@ fun QueryBus.registerQueryHandler(storeKey: String, instance: StorageQueryHandle
   ) { message -> instance.findSnapshot(message.payload as QueryForSnapshot) }
 }
 
-fun QueryBus.queryForSnapshot(storeKey: String, ownBackupLocation: String): List<Result<Snapshot>> {
+fun QueryBus.queryForSnapshot(storeKey: String, instanceKey: String): List<Result<Snapshot>> {
   val queryMessage =
     GenericQueryMessage(
-      QueryForSnapshot(storeKey = storeKey, ownBackupLocation = ownBackupLocation),
+      QueryForSnapshot(storeKey = storeKey, instanceKey = instanceKey),
       QUERY_NAME + storeKey,
       ResponseTypes.optionalInstanceOf(Snapshot::class.java)
     )
@@ -79,17 +79,13 @@ fun QueryBus.queryForSnapshot(storeKey: String, ownBackupLocation: String): List
 
 data class QueryForSnapshot(
   val storeKey: String,
-  val ownBackupLocation: String
+  val instanceKey: String
 )
 
 data class Snapshot(
-  val location: String,
+  val instanceKey: String,
   val bytes: ByteArray
 ) {
-
-  companion object {
-    fun empty(location: String) = Snapshot(location = location, bytes = byteArrayOf())
-  }
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -97,14 +93,14 @@ data class Snapshot(
 
     other as Snapshot
 
-    if (location != other.location) return false
+    if (instanceKey != other.instanceKey) return false
     if (!bytes.contentEquals(other.bytes)) return false
 
     return true
   }
 
   override fun hashCode(): Int {
-    var result = location.hashCode()
+    var result = instanceKey.hashCode()
     result = 31 * result + bytes.contentHashCode()
     return result
   }

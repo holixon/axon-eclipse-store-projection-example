@@ -25,7 +25,6 @@ open class PersistentMapBasedRepository<KEY : Any, VALUE : Any>(
     fun <KEY, VALUE> noIdExtractor(): (VALUE) -> KEY = { throw NotImplementedError("No extractor for ids provided.") }
   }
 
-
   override fun initializeModelInstance(): ConcurrentHashMap<KEY, VALUE> = ConcurrentHashMap()
 
   override fun findById(id: KEY): VALUE {

@@ -1,6 +1,6 @@
 package io.holixon.axon.eclipsestore.root
 
-import io.holixon.axon.eclipsestore.root.FileSystemHelper.isStorageExists
+import io.holixon.axon.eclipsestore.root.FileSystemHelper.storageExists
 import mu.KLogging
 import org.axonframework.queryhandling.NoHandlerForQueryException
 import org.axonframework.queryhandling.QueryBus
@@ -26,25 +26,25 @@ class StorageRoot {
      * Initialize storage root for / from given storage manager.
      * @param managerFactory storage manager factory.
      * @param foundationFactory foundation factory.
-     * @param storeProjectionSupportProperties store support properties.
+     * @param projectionSupportProperties store support properties.
      * @return initialized storage root.
      */
     fun init(
-      storeProjectionSupportProperties: StoreProjectionSupportProperties,
+      projectionSupportProperties: ProjectionSupportProperties,
       managerFactory: EmbeddedStorageManagerFactory,
       foundationFactory: EmbeddedStorageFoundationFactory,
       queryBus: QueryBus
     ): StorageRoot {
 
-      val eclipseStoreProperties = storeProjectionSupportProperties.storeProperties
+      val eclipseStoreProperties = projectionSupportProperties.store
       val storageManager = synchronized(this) {
-        if (!isStorageExists(eclipseStoreProperties)) {
+        if (!storageExists(eclipseStoreProperties)) {
           logger.info { "[STORAGE-ROOT]: Storage is not initialized." }
           logger.info { "[STORAGE-ROOT]: Querying for a backup." }
           try {
             val backups = queryBus.queryForSnapshot(
-              ownBackupLocation = eclipseStoreProperties.backupDirectory,
-              storeKey = storeProjectionSupportProperties.storeKey
+              storeKey = projectionSupportProperties.storeKey,
+              instanceKey = projectionSupportProperties.instanceKey
             )
             logger.info { "[STORAGE-ROOT]: Received ${backups.size} backup responses." }
             backups
@@ -53,7 +53,7 @@ class StorageRoot {
                   throw result.exceptionOrNull()!!
                 } else {
                   val snapshot = result.getOrThrow()
-                  logger.info { "[STORAGE-ROOT]: Valid response from ${snapshot.location}." }
+                  logger.info { "[STORAGE-ROOT]: Valid response from instance ${snapshot.instanceKey}." }
                   snapshot.bytes
                 }
               }.firstOrNull() // in case we didn't get any
@@ -87,11 +87,11 @@ class StorageRoot {
       }
 
       // register manually
-      logger.info { "[STORAGE-ROOT]: Activating backup ${storeProjectionSupportProperties.storeKey} query handler for others." }
+      logger.info { "[STORAGE-ROOT]: Activating backup ${projectionSupportProperties.storeKey} query handler for others." }
       queryBus.registerQueryHandler(
-        storeKey = storeProjectionSupportProperties.storeKey,
+        storeKey = projectionSupportProperties.storeKey,
         instance = StorageQueryHandler(
-          storeProjectionSupportProperties = storeProjectionSupportProperties
+          projectionSupportProperties = projectionSupportProperties
         )
       )
 

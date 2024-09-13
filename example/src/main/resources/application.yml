@@ -23,10 +23,6 @@ server:
     whitelabel:
       enabled:  false
 
-vaadin:
-  url-mapping: /storage-console/*
-
-
 logging:
   level:
     io.holixon.example.axon.eclipsestore.infrastructure: INFO # set to DEBUG for Eclipse TokenStore tracking.
