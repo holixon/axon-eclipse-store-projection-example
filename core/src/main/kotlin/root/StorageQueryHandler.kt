@@ -6,7 +6,6 @@ import mu.KLogging
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.GenericQueryMessage
 import org.axonframework.queryhandling.QueryBus
-import org.eclipse.store.integrations.spring.boot.types.configuration.EclipseStoreProperties
 import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
@@ -14,9 +13,10 @@ import java.util.stream.Collectors
 
 @Component
 class StorageQueryHandler(
-  private val eclipseStoreProperties: EclipseStoreProperties,
   private val storeProjectionSupportProperties: StoreProjectionSupportProperties
 ) {
+
+  private val eclipseStoreProperties = storeProjectionSupportProperties.storeProperties
 
   companion object : KLogging() {
     const val QUERY_NAME = "queryForBackupSnapshot"
@@ -47,9 +47,9 @@ class StorageQueryHandler(
   }
 }
 
-fun QueryBus.registerQueryHandler(instance: StorageQueryHandler) {
+fun QueryBus.registerQueryHandler(storeKey: String, instance: StorageQueryHandler) {
   this.subscribe<Snapshot>(
-    QUERY_NAME,
+    QUERY_NAME + storeKey,
     Snapshot::class.java
   ) { message -> instance.findSnapshot(message.payload as QueryForSnapshot) }
 }
@@ -58,7 +58,7 @@ fun QueryBus.queryForSnapshot(storeKey: String, ownBackupLocation: String): List
   val queryMessage =
     GenericQueryMessage(
       QueryForSnapshot(storeKey = storeKey, ownBackupLocation = ownBackupLocation),
-      QUERY_NAME,
+      QUERY_NAME + storeKey,
       ResponseTypes.optionalInstanceOf(Snapshot::class.java)
     )
   return this

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class SingleInstanceStorageRootSupplier(
-  private val eclipseStoreProperties: EclipseStoreProperties,
   private val foundationFactory: EmbeddedStorageFoundationFactory,
   private val managerFactory: EmbeddedStorageManagerFactory,
   private val queryBus: QueryBus,
@@ -22,7 +21,6 @@ class SingleInstanceStorageRootSupplier(
     synchronized(this) {
       if (!this::root.isInitialized) {
         this.root = StorageRoot.init(
-          eclipseStoreProperties = eclipseStoreProperties,
           storeProjectionSupportProperties = storeProjectionSupportProperties,
           queryBus = queryBus,
           managerFactory = managerFactory,

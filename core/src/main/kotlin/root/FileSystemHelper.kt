@@ -18,7 +18,7 @@ object FileSystemHelper {
   /**
    *
    */
-  fun isStorageInitialized(eclipseStoreProperties: EclipseStoreProperties): Boolean {
+  fun isStorageExists(eclipseStoreProperties: EclipseStoreProperties): Boolean {
     return Files.exists(Path.of(eclipseStoreProperties.storageDirectory))
       && Files.exists(Path.of(eclipseStoreProperties.storageDirectory + "/" + eclipseStoreProperties.typeDictionaryFileName))
   }

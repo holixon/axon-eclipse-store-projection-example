@@ -1,10 +1,9 @@
 package io.holixon.axon.eclipsestore.root
 
-import io.holixon.axon.eclipsestore.root.FileSystemHelper.isStorageInitialized
+import io.holixon.axon.eclipsestore.root.FileSystemHelper.isStorageExists
 import mu.KLogging
 import org.axonframework.queryhandling.NoHandlerForQueryException
 import org.axonframework.queryhandling.QueryBus
-import org.eclipse.store.integrations.spring.boot.types.configuration.EclipseStoreProperties
 import org.eclipse.store.integrations.spring.boot.types.factories.EmbeddedStorageFoundationFactory
 import org.eclipse.store.integrations.spring.boot.types.factories.EmbeddedStorageManagerFactory
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager
@@ -27,24 +26,26 @@ class StorageRoot {
      * Initialize storage root for / from given storage manager.
      * @param managerFactory storage manager factory.
      * @param foundationFactory foundation factory.
-     * @param eclipseStoreProperties eclipse properties.
-     * @param storeKey store key.
+     * @param storeProjectionSupportProperties store support properties.
      * @return initialized storage root.
      */
     fun init(
-      eclipseStoreProperties: EclipseStoreProperties,
       storeProjectionSupportProperties: StoreProjectionSupportProperties,
       managerFactory: EmbeddedStorageManagerFactory,
       foundationFactory: EmbeddedStorageFoundationFactory,
       queryBus: QueryBus
     ): StorageRoot {
 
+      val eclipseStoreProperties = storeProjectionSupportProperties.storeProperties
       val storageManager = synchronized(this) {
-        if (!isStorageInitialized(eclipseStoreProperties)) {
+        if (!isStorageExists(eclipseStoreProperties)) {
           logger.info { "[STORAGE-ROOT]: Storage is not initialized." }
           logger.info { "[STORAGE-ROOT]: Querying for a backup." }
           try {
-            val backups = queryBus.queryForSnapshot(ownBackupLocation = eclipseStoreProperties.backupDirectory, storeKey = storeProjectionSupportProperties.storeKey)
+            val backups = queryBus.queryForSnapshot(
+              ownBackupLocation = eclipseStoreProperties.backupDirectory,
+              storeKey = storeProjectionSupportProperties.storeKey
+            )
             logger.info { "[STORAGE-ROOT]: Received ${backups.size} backup responses." }
             backups
               .map { result ->
@@ -86,10 +87,10 @@ class StorageRoot {
       }
 
       // register manually
-      logger.info { "[STORAGE-ROOT]: Activating query handler for others." }
+      logger.info { "[STORAGE-ROOT]: Activating backup ${storeProjectionSupportProperties.storeKey} query handler for others." }
       queryBus.registerQueryHandler(
-        StorageQueryHandler(
-          eclipseStoreProperties = eclipseStoreProperties,
+        storeKey = storeProjectionSupportProperties.storeKey,
+        instance = StorageQueryHandler(
           storeProjectionSupportProperties = storeProjectionSupportProperties
         )
       )
