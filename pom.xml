@@ -19,7 +19,7 @@
   <url>https://github.com/holixon/axon-eclipse-store-projection-example/</url>
 
   <properties>
-    <spring-boot.version>3.3.3</spring-boot.version>
+    <spring-boot.version>3.3.4</spring-boot.version>
     <assertj.version>3.24.2</assertj.version>
     <mockito.version>5.4.0</mockito.version>
   </properties>
