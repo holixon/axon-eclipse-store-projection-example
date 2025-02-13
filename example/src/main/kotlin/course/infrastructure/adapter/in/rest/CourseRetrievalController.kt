@@ -2,7 +2,6 @@ package io.holixon.example.university.course.infrastructure.adapter.`in`.rest
 
 import io.holixon.example.university.course.application.port.`in`.RetrieveCoursesInPort
 import io.holixon.example.university.course.domain.query.Course
-import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController
 class CourseRetrievalController(
   private val retrieveCoursesInPort: RetrieveCoursesInPort
 ) {
-  companion object : KLogging()
-
   @GetMapping
   fun getCourses(): ResponseEntity<List<CourseDto>> {
     return ok(retrieveCoursesInPort.getAllCourses().map { it.toDto() })

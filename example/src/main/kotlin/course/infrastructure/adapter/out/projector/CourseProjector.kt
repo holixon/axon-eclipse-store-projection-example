@@ -1,16 +1,18 @@
 package io.holixon.example.university.course.infrastructure.adapter.out.projector
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.example.university.course.infrastructure.adapter.out.projector.CourseProjector.Companion.GROUP
 import io.holixon.example.university.course.domain.event.CourseCapacityChangedEvent
 import io.holixon.example.university.course.domain.event.CourseCreatedEvent
 import io.holixon.example.university.course.domain.event.CourseOccupationChangedEvent
 import io.holixon.example.university.course.domain.query.Course
 import jakarta.annotation.PostConstruct
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.eventhandling.ResetHandler
 import org.springframework.stereotype.Component
+
+private val logger = KotlinLogging.logger {}
 
 @Component
 @ProcessingGroup(GROUP)
@@ -18,7 +20,7 @@ class CourseProjector(
   private val courseProjectorRepository: CourseProjectorRepository
 ) {
 
-  companion object : KLogging() {
+  companion object {
     const val GROUP = "CourseProjector"
   }
 

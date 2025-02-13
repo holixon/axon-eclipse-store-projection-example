@@ -1,5 +1,6 @@
 package io.holixon.example.university.course.infrastructure.config
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.eclipsestore.root.StorageRootSupplier
 import io.holixon.axon.eclipsestore.tokenstore.ConfigurationSupplier
 import io.holixon.axon.eclipsestore.tokenstore.EclipseStoreTokenStore
@@ -9,17 +10,16 @@ import io.holixon.example.university.course.infrastructure.adapter.out.projector
 import io.holixon.example.university.course.infrastructure.adapter.out.query.impl.CourseProjectionRepository
 import io.holixon.example.university.course.infrastructure.adapter.out.query.impl.CourseProjectionRepositoryImpl
 import io.holixon.example.university.global.config.AxonSupportConfiguration.Companion.TOKEN_STORE_NAME
-import mu.KLogging
 import org.axonframework.config.EventProcessingConfigurer
 import org.axonframework.eventhandling.TrackingEventProcessorConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
+private val logger = KotlinLogging.logger {}
+
 @Configuration
 class CourseProjectionConfiguration {
-
-  companion object : KLogging()
 
   @Autowired
   fun configureCoursesProcessor(

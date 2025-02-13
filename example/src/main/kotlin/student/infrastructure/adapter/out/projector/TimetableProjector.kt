@@ -1,22 +1,24 @@
 package io.holixon.example.university.student.infrastructure.adapter.out.projector
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.example.university.student.domain.event.StudentJoinedCourseEvent
 import io.holixon.example.university.student.domain.event.StudentLeftCourseEvent
 import io.holixon.example.university.student.domain.event.StudentRegisteredEvent
 import io.holixon.example.university.student.domain.query.Timetable
 import io.holixon.example.university.student.infrastructure.adapter.out.projector.TimetableProjector.Companion.GROUP
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.eventhandling.ResetHandler
 import org.springframework.stereotype.Component
+
+private val logger = KotlinLogging.logger {}
 
 @Component
 @ProcessingGroup(GROUP)
 class TimetableProjector(
   private val timetableProjectorRepository: TimetableProjectorRepository
 ) {
-  companion object : KLogging() {
+  companion object {
     const val GROUP = "TimetableProjector"
   }
 

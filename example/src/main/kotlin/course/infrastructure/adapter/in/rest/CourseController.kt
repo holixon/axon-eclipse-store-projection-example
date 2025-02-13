@@ -2,7 +2,6 @@ package io.holixon.example.university.course.infrastructure.adapter.`in`.rest
 
 import io.holixon.example.university.course.application.port.`in`.CreateCourseInPort
 import io.holixon.example.university.course.application.port.`in`.ModifyCourseInPort
-import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.created
 import org.springframework.http.ResponseEntity.noContent
@@ -17,8 +16,6 @@ class CourseController(
   private val createCourseInPort: CreateCourseInPort,
   private val modifyCourseInPort: ModifyCourseInPort,
 ) {
-  companion object : KLogging()
-
   @PutMapping
   fun create(dto: CourseCreationDto): ResponseEntity<Void> {
     val id = UUID.randomUUID().toString()

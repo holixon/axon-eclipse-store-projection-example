@@ -1,14 +1,16 @@
 package io.holixon.example.university.student.infrastructure.adapter.out.projector
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.example.university.student.domain.event.StudentRegisteredEvent
 import io.holixon.example.university.student.domain.event.StudentUnregisteredEvent
 import io.holixon.example.university.student.domain.query.Matriculation
 import io.holixon.example.university.student.infrastructure.adapter.out.projector.StudentProjector.Companion.GROUP
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.eventhandling.ResetHandler
 import org.springframework.stereotype.Component
+
+private val logger = KotlinLogging.logger {}
 
 @Component
 @ProcessingGroup(GROUP)
@@ -16,7 +18,7 @@ class StudentProjector(
   val studentProjectorRepository: StudentProjectorRepository
 ) {
 
-  companion object : KLogging() {
+  companion object {
     const val GROUP = "StudentProjector"
   }
 

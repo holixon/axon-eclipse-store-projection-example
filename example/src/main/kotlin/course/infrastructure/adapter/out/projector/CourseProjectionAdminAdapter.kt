@@ -1,17 +1,17 @@
 package io.holixon.example.university.course.infrastructure.adapter.out.projector
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.example.university.course.application.port.out.CourseProjectionAdminOutPort
 import io.holixon.example.university.global.support.axon.ProcessorSupport
-import mu.KLogging
 import org.springframework.stereotype.Component
+
+private val logger = KotlinLogging.logger {}
 
 @Component
 class CourseProjectionAdminAdapter(
   private val courseProjectorRepository: CourseProjectorRepository,
   private val processorSupport: ProcessorSupport
 ) : CourseProjectionAdminOutPort {
-
-  companion object: KLogging()
 
   override fun resetCourseProjection() {
     logger.info { "[COURSE ADMIN ADAPTER]: There are currently ${courseProjectorRepository.countAll()} courses available." }

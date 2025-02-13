@@ -1,22 +1,24 @@
 package io.holixon.example.university.global.config
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.example.university.course.infrastructure.adapter.out.projector.CourseProjector
 import io.holixon.example.university.global.support.axon.ProcessorSupport
 import io.holixon.example.university.student.infrastructure.adapter.`in`.event.CourseSubscriptionProcessManager
 import io.holixon.example.university.student.infrastructure.adapter.out.projector.StudentProjector
 import io.holixon.example.university.student.infrastructure.adapter.out.projector.TimetableProjector
-import mu.KLogging
 import org.axonframework.config.EventProcessingConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 
+private val logger = KotlinLogging.logger {}
+
 @Configuration
 @EnableScheduling
 class AxonSupportConfiguration {
 
-  companion object : KLogging() {
+  companion object {
     const val TOKEN_STORE_NAME = "university-application"
   }
 
