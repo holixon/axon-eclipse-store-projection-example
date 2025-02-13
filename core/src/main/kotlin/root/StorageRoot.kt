@@ -1,7 +1,7 @@
 package io.holixon.axon.eclipsestore.root
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.eclipsestore.root.FileSystemHelper.storageExists
-import mu.KLogging
 import org.axonframework.queryhandling.NoHandlerForQueryException
 import org.axonframework.queryhandling.QueryBus
 import org.eclipse.store.integrations.spring.boot.types.factories.EmbeddedStorageFoundationFactory
@@ -9,7 +9,7 @@ import org.eclipse.store.integrations.spring.boot.types.factories.EmbeddedStorag
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager
 import java.util.concurrent.ConcurrentHashMap
 
-
+private val logger = KotlinLogging.logger {}
 /**
  * Default storage root using a map of named elements.
  */
@@ -21,7 +21,7 @@ class StorageRoot {
 
   private val elements: ConcurrentHashMap<String, Any> = ConcurrentHashMap()
 
-  companion object : KLogging() {
+  companion object {
     /**
      * Initialize storage root for / from given storage manager.
      * @param managerFactory storage manager factory.

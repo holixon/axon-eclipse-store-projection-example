@@ -1,13 +1,15 @@
 package io.holixon.example.university.course.infrastructure.adapter.`in`.rest
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.example.university.course.application.port.`in`.SubscribeToCourseInPort
 import io.holixon.example.university.course.application.port.`in`.UnsubscribeFromCourseInPort
 import jakarta.validation.Valid
-import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.noContent
 import org.springframework.web.bind.annotation.*
 import javax.annotation.Nonnull
+
+private val logger = KotlinLogging.logger {}
 
 @RestController
 @RequestMapping("/course-subscriptions")
@@ -15,8 +17,6 @@ class CourseSubscriptionController(
   val subscribeToCourseInPort: SubscribeToCourseInPort,
   val unsubscribeFromCourseInPort: UnsubscribeFromCourseInPort
 ) {
-
-  companion object : KLogging()
 
   @PutMapping
   fun create(@Valid @RequestBody @Nonnull dto: SubscribeToCourseDto): ResponseEntity<Void> {

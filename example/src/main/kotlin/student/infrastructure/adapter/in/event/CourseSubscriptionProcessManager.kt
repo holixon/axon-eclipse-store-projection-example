@@ -1,5 +1,6 @@
 package io.holixon.example.university.student.infrastructure.adapter.`in`.event
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.example.university.course.application.port.`in`.RetrieveCoursesInPort
 import io.holixon.example.university.course.application.port.`in`.UnsubscribeFromCourseInPort
 import io.holixon.example.university.course.domain.event.CourseSubscriptionCreatedEvent
@@ -8,22 +9,21 @@ import io.holixon.example.university.student.application.port.`in`.SubscribeStud
 import io.holixon.example.university.student.application.port.`in`.UnsubscribeStudentInPort
 import io.holixon.example.university.student.infrastructure.adapter.`in`.event.CourseSubscriptionProcessManager.Companion.GROUP
 import jakarta.inject.Inject
-import mu.KLogging
 import org.axonframework.config.ProcessingGroup
-import org.axonframework.eventhandling.EventHandler
-import org.axonframework.modelling.saga.EndSaga
 import org.axonframework.modelling.saga.SagaEventHandler
 import org.axonframework.modelling.saga.SagaLifecycle
 import org.axonframework.modelling.saga.StartSaga
 import org.axonframework.spring.stereotype.Saga
 import org.springframework.stereotype.Component
 
+private val logger = KotlinLogging.logger {}
+
 @Component
 @ProcessingGroup(GROUP)
 @Saga
 class CourseSubscriptionProcessManager {
 
-  companion object: KLogging() {
+  companion object {
     const val GROUP = "CourseSubscriptionProcessManager";
   }
 

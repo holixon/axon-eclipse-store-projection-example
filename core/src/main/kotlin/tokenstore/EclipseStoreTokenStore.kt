@@ -1,8 +1,8 @@
 package io.holixon.axon.eclipsestore.tokenstore
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.eclipsestore.root.StorageRoot
 import io.holixon.axon.eclipsestore.root.StorageRootSupplier
-import mu.KLogging
 import org.axonframework.eventhandling.GlobalSequenceTrackingToken
 import org.axonframework.eventhandling.TrackingToken
 import org.axonframework.eventhandling.tokenstore.TokenStore
@@ -11,6 +11,8 @@ import org.axonframework.eventhandling.tokenstore.UnableToInitializeTokenExcepti
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * Axon Token Store implementation for storing tokens of event processor tokens using Eclipse Store.
@@ -26,7 +28,7 @@ class EclipseStoreTokenStore(
   private lateinit var storageRoot: StorageRoot
   private val identifier: String = configurationSupplier.geCurrentNodeIdentifier()
 
-  companion object : KLogging() {
+  companion object {
     const val TOKEN = "tokenstore-"
     val NULL_TOKEN = GlobalSequenceTrackingToken(-1L)
   }

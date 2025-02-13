@@ -1,7 +1,7 @@
 package io.holixon.axon.eclipsestore.root
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.eclipsestore.tokenstore.ConfigurationSupplier
-import mu.KLogging
 import org.axonframework.axonserver.connector.AxonServerConfiguration
 import org.eclipse.store.integrations.spring.boot.types.configuration.EclipseStoreProperties
 import org.springframework.beans.factory.annotation.Qualifier
@@ -11,11 +11,12 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import java.nio.file.Path
 
+private val logger = KotlinLogging.logger {}
+
 @Configuration
 @ComponentScan
 @EnableConfigurationProperties(value = [ProjectionSupportProperties::class])
 class ProjectionSupportConfiguration {
-  companion object : KLogging()
 
   @Bean
   fun configurationSupplier(

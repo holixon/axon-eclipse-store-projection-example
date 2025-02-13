@@ -1,5 +1,6 @@
 package io.holixon.example.university.student.infrastructure.config
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.eclipsestore.root.StorageRootSupplier
 import io.holixon.axon.eclipsestore.tokenstore.ConfigurationSupplier
 import io.holixon.axon.eclipsestore.tokenstore.EclipseStoreTokenStore
@@ -9,17 +10,16 @@ import io.holixon.example.university.student.infrastructure.adapter.out.projecto
 import io.holixon.example.university.student.infrastructure.adapter.out.projector.TimetableProjectorRepositoryImpl
 import io.holixon.example.university.student.infrastructure.adapter.out.query.impl.TimetableProjectionRepository
 import io.holixon.example.university.student.infrastructure.adapter.out.query.impl.TimetableProjectionRepositoryImpl
-import mu.KLogging
 import org.axonframework.config.EventProcessingConfigurer
 import org.axonframework.eventhandling.TrackingEventProcessorConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
+private val logger = KotlinLogging.logger {}
+
 @Configuration
 class TimetableProjectionConfiguration {
-
-  companion object : KLogging()
 
   @Autowired
   fun configureTimetableProcessor(

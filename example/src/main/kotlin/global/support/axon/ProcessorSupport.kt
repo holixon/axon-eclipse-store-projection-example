@@ -1,17 +1,17 @@
 package io.holixon.example.university.global.support.axon
 
-import mu.KLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.axonframework.config.EventProcessingConfiguration
 import org.axonframework.eventhandling.GapAwareTrackingToken
 import org.axonframework.eventhandling.TrackingEventProcessor
 import org.axonframework.eventhandling.tokenstore.UnableToClaimTokenException
 import java.util.*
 
+private val logger = KotlinLogging.logger {}
+
 class ProcessorSupport(
   private val eventProcessingConfiguration: EventProcessingConfiguration,
 ) {
-
-  companion object : KLogging()
 
   fun replay(processorName: String, index: Long = 0): Boolean {
     getTrackingEventProcessor(processorName).apply {

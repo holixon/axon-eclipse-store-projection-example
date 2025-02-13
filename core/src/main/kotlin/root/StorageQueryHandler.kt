@@ -1,8 +1,8 @@
 package io.holixon.axon.eclipsestore.root
 
 import com.google.common.io.Files
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.eclipsestore.root.StorageQueryHandler.Companion.QUERY_NAME
-import mu.KLogging
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.GenericQueryMessage
 import org.axonframework.queryhandling.QueryBus
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 
+private val logger = KotlinLogging.logger {}
 
 @Component
 class StorageQueryHandler(
@@ -18,7 +19,7 @@ class StorageQueryHandler(
 
   private val eclipseStoreProperties = projectionSupportProperties.store
 
-  companion object : KLogging() {
+  companion object {
     const val QUERY_NAME = "queryForBackupSnapshot"
   }
 
