@@ -11,7 +11,7 @@
   <artifactId>axon-eclipse-store-projection-support</artifactId>
 
   <properties>
-    <eclipsestore.version>2.1.2</eclipsestore.version>
+    <eclipsestore.version>3.0.1</eclipsestore.version>
   </properties>
 
   <dependencies>
